@@ -222,12 +222,12 @@ img {
   position: absolute;
   inset: 0;
   z-index: 3;
-  cursor: none;
 }
 
-#jaehyun.section-active .hero-nav,
-#work.section-active .hero-nav {
+#jaehyun.section-active .hero-nav.hero-nav-ready,
+#work.section-active .hero-nav.hero-nav-ready {
   display: block;
+  cursor: none;
 }
 
 .hero-zone {

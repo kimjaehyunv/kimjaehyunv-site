@@ -8,6 +8,11 @@ const cursorArrowRight = document.querySelector(".custom-cursor-arrow-right");
 
 const viewers = new Map();
 
+function setNavReady(sectionId, ready) {
+  const nav = document.getElementById(sectionId)?.querySelector(".hero-nav");
+  nav?.classList.toggle("hero-nav-ready", ready);
+}
+
 function showSection(sectionId) {
   sections.forEach((section) => {
     section.classList.toggle("section-active", section.id === sectionId);
@@ -16,6 +21,14 @@ function showSection(sectionId) {
   menuLinks.forEach((link) => {
     link.classList.toggle("active", link.dataset.section === sectionId);
   });
+
+  const viewer = viewers.get(sectionId);
+  if (viewer) {
+    const activeImg = viewer.section.querySelector(".slide-active img");
+    if (activeImg) {
+      activeImg.loading = "eager";
+    }
+  }
 }
 
 sectionLinks.forEach((link) => {
@@ -33,36 +46,52 @@ function createViewer(sectionId) {
   const section = document.getElementById(sectionId);
   if (!section) return null;
 
-  const slides = section.querySelectorAll(".hero-slideshow .slide");
   const prevZone = section.querySelector(".hero-zone-prev");
   const nextZone = section.querySelector(".hero-zone-next");
   let currentSlide = 0;
 
+  function getSlides() {
+    return section.querySelectorAll(".hero-slideshow .slide");
+  }
+
   function showSlide(index) {
+    const slides = getSlides();
+    if (!slides.length) return;
+
     slides.forEach((slide, i) => {
       slide.classList.toggle("slide-active", i === index);
     });
     currentSlide = index;
+
+    const activeImg = slides[index]?.querySelector("img");
+    if (activeImg) {
+      activeImg.loading = "eager";
+    }
   }
 
   prevZone?.addEventListener("click", () => {
+    const slides = getSlides();
     if (!slides.length) return;
     showSlide((currentSlide - 1 + slides.length) % slides.length);
   });
 
   nextZone?.addEventListener("click", () => {
+    const slides = getSlides();
     if (!slides.length) return;
     showSlide((currentSlide + 1) % slides.length);
   });
 
+  const slideCount = getSlides().length;
+  setNavReady(sectionId, slideCount > 0);
+
   return {
     section,
-    slides,
+    getSlides,
     showSlide,
   };
 }
 
-async function initSlideshows() {
+function initSlideshows() {
   const jaehyunContainer = document.querySelector("#jaehyun .hero-slideshow");
   if (jaehyunContainer) {
     buildHeroSlideshow(jaehyunContainer);
@@ -72,7 +101,7 @@ async function initSlideshows() {
 
   const workContainer = document.querySelector("#work .hero-slideshow");
   if (workContainer) {
-    await buildWorkSlideshow(workContainer);
+    buildWorkSlideshow(workContainer);
     const workViewer = createViewer("work");
     if (workViewer) viewers.set("work", workViewer);
   }
@@ -85,9 +114,12 @@ function isOverSidebar(x, y) {
 }
 
 function isInNavigationArea(x, y) {
-  const activeViewer = Array.from(viewers.values()).find((viewer) =>
-    viewer.section.classList.contains("section-active")
-  );
+  const activeViewer = Array.from(viewers.values()).find((viewer) => {
+    return (
+      viewer.section.classList.contains("section-active") &&
+      viewer.getSlides().length > 0
+    );
+  });
 
   return Boolean(activeViewer) && !isOverSidebar(x, y);
 }
@@ -114,9 +146,9 @@ document.addEventListener("mouseleave", () => {
   customCursor?.classList.remove("is-visible");
 });
 
-initSlideshows().then(() => {
-  const initialSection = window.location.hash.slice(1) || "jaehyun";
-  if (document.getElementById(initialSection)) {
-    showSection(initialSection);
-  }
-});
+initSlideshows();
+
+const initialSection = window.location.hash.slice(1) || "jaehyun";
+if (document.getElementById(initialSection)) {
+  showSection(initialSection);
+}
