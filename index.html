@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAEHYUN KIM</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <h1 class="site-title">
+      <a href="#jaehyun" data-section="jaehyun" data-reset-slideshow>JAEHYUN KIM</a>
+    </h1>
+    <nav class="menu">
+      <a href="#jaehyun" class="menu-link active" data-section="jaehyun">JAEHYUN</a>
+      <a href="#work" class="menu-link" data-section="work">WORK</a>
+      <a href="#info" class="menu-link" data-section="info">INFO</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+
+    <!-- Home: large centered photograph -->
+    <section id="jaehyun" class="section section-active">
+      <figure class="hero-image">
+        <div class="hero-slideshow"></div>
+      </figure>
+      <div class="hero-nav">
+        <button type="button" class="hero-zone hero-zone-prev" aria-label="Previous image"></button>
+        <button type="button" class="hero-zone hero-zone-next" aria-label="Next image"></button>
+      </div>
+    </section>
+
+    <!-- Work: placeholder grid for future projects -->
+    <section id="work" class="section">
+      <div class="work-grid">
+        <figure class="work-item">
+          <img src="images/hero.jpg" alt="Work sample 1">
+        </figure>
+        <figure class="work-item">
+          <img src="images/hero.jpg" alt="Work sample 2">
+        </figure>
+        <figure class="work-item">
+          <img src="images/hero.jpg" alt="Work sample 3">
+        </figure>
+      </div>
+    </section>
+
+    <!-- Info -->
+    <section id="info" class="section">
+      <div class="text-panel info-panel">
+        <p class="info-bio">Jaehyun Kim is a photographer based in Seoul.</p>
+        <p>
+          <a href="mailto:kimjaehyunv8@gmail.com">kimjaehyunv8@gmail.com</a>
+        </p>
+        <p>
+          <a href="https://instagram.com/kimjaehyunv" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="custom-cursor" aria-hidden="true">
+    <svg class="custom-cursor-arrow custom-cursor-arrow-left" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17 12H7" stroke="#000000" stroke-width="1.1" stroke-linecap="round"/>
+      <path d="M7 12L11.5 7.5" stroke="#000000" stroke-width="1.1" stroke-linecap="round"/>
+      <path d="M7 12L11.5 16.5" stroke="#000000" stroke-width="1.1" stroke-linecap="round"/>
+    </svg>
+    <svg class="custom-cursor-arrow custom-cursor-arrow-right" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 12H17" stroke="#000000" stroke-width="1.1" stroke-linecap="round"/>
+      <path d="M17 12L12.5 7.5" stroke="#000000" stroke-width="1.1" stroke-linecap="round"/>
+      <path d="M17 12L12.5 16.5" stroke="#000000" stroke-width="1.1" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <script src="js/slides.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
