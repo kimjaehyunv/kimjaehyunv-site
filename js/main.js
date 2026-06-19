@@ -15,14 +15,47 @@ function setNavReady(sectionId, ready) {
 }
 
 function getActiveImageSrc(sectionId) {
-  const slide = document
-    .getElementById(sectionId)
-    ?.querySelector(".hero-slideshow .slide-active");
+  const section = document.getElementById(sectionId);
+  if (!section) return null;
+
+  if (isMobileView()) {
+    const feed = section.querySelector(".mobile-scroll-feed");
+    if (!feed) return null;
+
+    const feedTop = feed.getBoundingClientRect().top;
+    let closestSrc = feed.querySelector("img")?.getAttribute("src") ?? null;
+    let closestDistance = Infinity;
+
+    feed.querySelectorAll("img").forEach((img) => {
+      const distance = Math.abs(img.getBoundingClientRect().top - feedTop);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestSrc = img.getAttribute("src");
+      }
+    });
+
+    return closestSrc;
+  }
+
+  const slide = section.querySelector(".hero-slideshow .slide-active");
   return slide?.querySelector("img")?.getAttribute("src") ?? null;
+}
+
+function getSectionScrollTop(sectionId) {
+  return document.getElementById(sectionId)?.scrollTop ?? 0;
 }
 
 function restoreSlideBySrc(sectionId, src) {
   if (!src) return;
+
+  if (isMobileView()) {
+    const section = document.getElementById(sectionId);
+    const img = section?.querySelector(`.mobile-scroll-feed img[src="${src}"]`);
+    if (img) {
+      img.scrollIntoView({ block: "start", behavior: "instant" });
+    }
+    return;
+  }
 
   const viewer = viewers.get(sectionId);
   if (!viewer) return;
@@ -37,6 +70,13 @@ function restoreSlideBySrc(sectionId, src) {
   }
 }
 
+function restoreSectionScrollTop(sectionId, scrollTop) {
+  const section = document.getElementById(sectionId);
+  if (section) {
+    section.scrollTop = scrollTop;
+  }
+}
+
 function showSection(sectionId) {
   sections.forEach((section) => {
     section.classList.toggle("section-active", section.id === sectionId);
@@ -46,6 +86,8 @@ function showSection(sectionId) {
     link.classList.toggle("active", link.dataset.section === sectionId);
   });
 
+  if (isMobileView()) return;
+
   const viewer = viewers.get(sectionId);
   if (viewer) {
     const activeImg = viewer.section.querySelector(".slide-active img");
@@ -54,7 +96,7 @@ function showSection(sectionId) {
     }
   }
 
-  if (sectionId === "work" && !isMobileView()) {
+  if (sectionId === "work") {
     window.scheduleWorkSpreadSync?.();
   }
 }
@@ -64,7 +106,12 @@ sectionLinks.forEach((link) => {
     event.preventDefault();
     showSection(link.dataset.section);
     if (link.hasAttribute("data-reset-slideshow")) {
-      viewers.get("jaehyun")?.showSlide(0);
+      if (isMobileView()) {
+        const jaehyunSection = document.getElementById("jaehyun");
+        jaehyunSection?.scrollTo({ top: 0, behavior: "instant" });
+      } else {
+        viewers.get("jaehyun")?.showSlide(0);
+      }
     }
     history.replaceState(null, "", `#${link.dataset.section}`);
   });
@@ -96,7 +143,7 @@ function createViewer(sectionId) {
       activeImg.loading = "eager";
     }
 
-    if (sectionId === "work" && !isMobileView()) {
+    if (sectionId === "work") {
       window.scheduleWorkSpreadSync?.();
     }
   }
@@ -114,7 +161,6 @@ function createViewer(sectionId) {
   }
 
   prevZone.onclick = () => {
-    if (isMobileView()) return;
     goPrev();
   };
 
@@ -134,21 +180,53 @@ function createViewer(sectionId) {
   };
 }
 
-function initSlideshows() {
-  const mobile = isMobileView();
+function initDesktopSlideshows() {
   const jaehyunContainer = document.querySelector("#jaehyun .hero-slideshow");
   if (jaehyunContainer) {
-    buildHeroSlideshow(jaehyunContainer, { mobile });
+    buildHeroSlideshow(jaehyunContainer, { mobile: false });
     const jaehyunViewer = createViewer("jaehyun");
     if (jaehyunViewer) viewers.set("jaehyun", jaehyunViewer);
   }
 
   const workContainer = document.querySelector("#work .hero-slideshow");
   if (workContainer) {
-    buildWorkSlideshow(workContainer, { mobile });
+    buildWorkSlideshow(workContainer, { mobile: false });
     const workViewer = createViewer("work");
     if (workViewer) viewers.set("work", workViewer);
   }
+}
+
+function initMobileScrollFeeds() {
+  const jaehyunContainer = document.querySelector("#jaehyun .hero-slideshow");
+  if (jaehyunContainer) {
+    buildMobileScrollFeed(
+      jaehyunContainer,
+      "images/jaehyun/",
+      getJaehyunImageFiles(),
+      "Photograph by Jaehyun Kim",
+    );
+    setNavReady("jaehyun", false);
+  }
+
+  const workContainer = document.querySelector("#work .hero-slideshow");
+  if (workContainer) {
+    buildMobileScrollFeed(
+      workContainer,
+      "images/work/",
+      getWorkImageFiles(),
+      "Work by Jaehyun Kim",
+    );
+    setNavReady("work", false);
+  }
+}
+
+function initSlideshows() {
+  if (isMobileView()) {
+    initMobileScrollFeeds();
+    return;
+  }
+
+  initDesktopSlideshows();
 }
 
 function rebuildSlideshows() {
@@ -156,14 +234,27 @@ function rebuildSlideshows() {
     document.querySelector(".section-active")?.id ?? "jaehyun";
   const jaehyunSrc = getActiveImageSrc("jaehyun");
   const workSrc = getActiveImageSrc("work");
+  const jaehyunScroll = getSectionScrollTop("jaehyun");
+  const workScroll = getSectionScrollTop("work");
+  const activeScroll = getSectionScrollTop(activeSection);
 
   document.querySelector("#jaehyun .hero-slideshow").innerHTML = "";
   document.querySelector("#work .hero-slideshow").innerHTML = "";
   viewers.clear();
 
   initSlideshows();
-  restoreSlideBySrc("jaehyun", jaehyunSrc);
-  restoreSlideBySrc("work", workSrc);
+
+  if (isMobileView()) {
+    restoreSectionScrollTop("jaehyun", jaehyunScroll);
+    restoreSectionScrollTop("work", workScroll);
+    restoreSectionScrollTop(activeSection, activeScroll);
+    restoreSlideBySrc("jaehyun", jaehyunSrc);
+    restoreSlideBySrc("work", workSrc);
+  } else {
+    restoreSlideBySrc("jaehyun", jaehyunSrc);
+    restoreSlideBySrc("work", workSrc);
+  }
+
   showSection(activeSection);
 }
 

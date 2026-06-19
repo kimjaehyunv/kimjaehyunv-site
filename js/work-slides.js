@@ -126,7 +126,15 @@ function flattenWorkSequence(sequence) {
   return flat;
 }
 
+function getWorkImageFiles() {
+  return flattenWorkSequence(WORK_SLIDE_SEQUENCE).map(
+    (slideData) => slideData.files[0],
+  );
+}
+
 function buildWorkSlideshow(container, options = {}) {
+  container.className = "hero-slideshow";
+
   const sequence = options.mobile
     ? flattenWorkSequence(WORK_SLIDE_SEQUENCE)
     : WORK_SLIDE_SEQUENCE;

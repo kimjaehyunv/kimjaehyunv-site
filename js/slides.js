@@ -54,7 +54,15 @@ function flattenJaehyunSequence(sequence) {
   return flat;
 }
 
+function getJaehyunImageFiles() {
+  return flattenJaehyunSequence(JAEHYUN_SLIDE_SEQUENCE).map(
+    (slideData) => slideData.files[0],
+  );
+}
+
 function buildHeroSlideshow(container, options = {}) {
+  container.className = "hero-slideshow";
+
   const sequence = options.mobile
     ? flattenJaehyunSequence(JAEHYUN_SLIDE_SEQUENCE)
     : JAEHYUN_SLIDE_SEQUENCE;
