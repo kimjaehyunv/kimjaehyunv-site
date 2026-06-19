@@ -135,17 +135,22 @@ img {
 .hero-slideshow .slide-active {
   opacity: 1;
   z-index: 2;
-  visibility: visible;
-  transition: none;
 }
 
-.hero-slideshow .slide {
-  visibility: hidden;
-  transition: opacity 0.1s ease-out, visibility 0s linear 0.1s;
-}
+@media (min-width: 769px) {
+  .hero-slideshow .slide {
+    visibility: hidden;
+    transition: opacity 0.1s ease-out, visibility 0s linear 0.1s;
+  }
 
-.hero-slideshow .slide img {
-  background-color: transparent;
+  .hero-slideshow .slide-active {
+    visibility: visible;
+    transition: none;
+  }
+
+  .hero-slideshow .slide img {
+    background-color: transparent;
+  }
 }
 
 .hero-slideshow .slide-single img {
@@ -366,11 +371,11 @@ img {
   margin-top: 0.7em;
 }
 
-/* Smaller screens — same Sergio-style left/right navigation */
+/* Smaller screens — Ted Min-style vertical scroll */
 @media (max-width: 768px) {
   html,
   body {
-    touch-action: manipulation;
+    touch-action: pan-y;
   }
 
   .sidebar {
@@ -400,18 +405,41 @@ img {
     font-size: 12px;
   }
 
+  .section {
+    display: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .section-active {
+    display: block;
+  }
+
   .hero-image {
-    padding-top: 96px;
+    position: static;
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 96px 20px 64px;
   }
 
-  #jaehyun.section-active .hero-nav.hero-nav-ready,
-  #work.section-active .hero-nav.hero-nav-ready {
-    cursor: auto;
+  .mobile-scroll-feed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 56px;
+    width: 100%;
   }
 
-  .hero-zone {
-    cursor: auto;
-    -webkit-tap-highlight-color: transparent;
+  .mobile-scroll-feed img {
+    width: auto;
+    max-width: 92vw;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .hero-nav {
+    display: none !important;
   }
 
   .custom-cursor {
