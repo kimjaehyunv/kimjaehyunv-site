@@ -37,8 +37,29 @@ function createSlideImage(file) {
   return img;
 }
 
-function buildHeroSlideshow(container) {
-  JAEHYUN_SLIDE_SEQUENCE.forEach((slideData, index) => {
+function flattenJaehyunSequence(sequence) {
+  const flat = [];
+
+  sequence.forEach((slideData) => {
+    if (slideData.type === "single") {
+      flat.push({ ...slideData });
+      return;
+    }
+
+    slideData.files.forEach((file) => {
+      flat.push({ type: "single", files: [file] });
+    });
+  });
+
+  return flat;
+}
+
+function buildHeroSlideshow(container, options = {}) {
+  const sequence = options.mobile
+    ? flattenJaehyunSequence(JAEHYUN_SLIDE_SEQUENCE)
+    : JAEHYUN_SLIDE_SEQUENCE;
+
+  sequence.forEach((slideData, index) => {
     const slide = document.createElement("div");
     slide.className = "slide";
 

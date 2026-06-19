@@ -7,10 +7,34 @@ const cursorArrowLeft = document.querySelector(".custom-cursor-arrow-left");
 const cursorArrowRight = document.querySelector(".custom-cursor-arrow-right");
 
 const viewers = new Map();
+let viewportListenerAttached = false;
 
 function setNavReady(sectionId, ready) {
   const nav = document.getElementById(sectionId)?.querySelector(".hero-nav");
   nav?.classList.toggle("hero-nav-ready", ready);
+}
+
+function getActiveImageSrc(sectionId) {
+  const slide = document
+    .getElementById(sectionId)
+    ?.querySelector(".hero-slideshow .slide-active");
+  return slide?.querySelector("img")?.getAttribute("src") ?? null;
+}
+
+function restoreSlideBySrc(sectionId, src) {
+  if (!src) return;
+
+  const viewer = viewers.get(sectionId);
+  if (!viewer) return;
+
+  const slides = viewer.getSlides();
+  const index = Array.from(slides).findIndex(
+    (slide) => slide.querySelector("img")?.getAttribute("src") === src,
+  );
+
+  if (index >= 0) {
+    viewer.showSlide(index);
+  }
 }
 
 function showSection(sectionId) {
@@ -28,6 +52,10 @@ function showSection(sectionId) {
     if (activeImg) {
       activeImg.loading = "eager";
     }
+  }
+
+  if (sectionId === "work" && !isMobileView()) {
+    window.scheduleWorkSpreadSync?.();
   }
 }
 
@@ -67,19 +95,32 @@ function createViewer(sectionId) {
     if (activeImg) {
       activeImg.loading = "eager";
     }
+
+    if (sectionId === "work" && !isMobileView()) {
+      window.scheduleWorkSpreadSync?.();
+    }
   }
 
-  prevZone?.addEventListener("click", () => {
+  function goPrev() {
     const slides = getSlides();
     if (!slides.length) return;
     showSlide((currentSlide - 1 + slides.length) % slides.length);
-  });
+  }
 
-  nextZone?.addEventListener("click", () => {
+  function goNext() {
     const slides = getSlides();
     if (!slides.length) return;
     showSlide((currentSlide + 1) % slides.length);
-  });
+  }
+
+  prevZone.onclick = () => {
+    if (isMobileView()) return;
+    goPrev();
+  };
+
+  nextZone.onclick = () => {
+    goNext();
+  };
 
   const slideCount = getSlides().length;
   setNavReady(sectionId, slideCount > 0);
@@ -88,23 +129,42 @@ function createViewer(sectionId) {
     section,
     getSlides,
     showSlide,
+    goNext,
+    goPrev,
   };
 }
 
 function initSlideshows() {
+  const mobile = isMobileView();
   const jaehyunContainer = document.querySelector("#jaehyun .hero-slideshow");
   if (jaehyunContainer) {
-    buildHeroSlideshow(jaehyunContainer);
+    buildHeroSlideshow(jaehyunContainer, { mobile });
     const jaehyunViewer = createViewer("jaehyun");
     if (jaehyunViewer) viewers.set("jaehyun", jaehyunViewer);
   }
 
   const workContainer = document.querySelector("#work .hero-slideshow");
   if (workContainer) {
-    buildWorkSlideshow(workContainer);
+    buildWorkSlideshow(workContainer, { mobile });
     const workViewer = createViewer("work");
     if (workViewer) viewers.set("work", workViewer);
   }
+}
+
+function rebuildSlideshows() {
+  const activeSection =
+    document.querySelector(".section-active")?.id ?? "jaehyun";
+  const jaehyunSrc = getActiveImageSrc("jaehyun");
+  const workSrc = getActiveImageSrc("work");
+
+  document.querySelector("#jaehyun .hero-slideshow").innerHTML = "";
+  document.querySelector("#work .hero-slideshow").innerHTML = "";
+  viewers.clear();
+
+  initSlideshows();
+  restoreSlideBySrc("jaehyun", jaehyunSrc);
+  restoreSlideBySrc("work", workSrc);
+  showSection(activeSection);
 }
 
 function isOverSidebar(x, y) {
@@ -114,6 +174,8 @@ function isOverSidebar(x, y) {
 }
 
 function isInNavigationArea(x, y) {
+  if (isMobileView()) return false;
+
   const activeViewer = Array.from(viewers.values()).find((viewer) => {
     return (
       viewer.section.classList.contains("section-active") &&
@@ -131,6 +193,8 @@ function setCursorDirection(x) {
 }
 
 document.addEventListener("mousemove", (event) => {
+  if (isMobileView()) return;
+
   const { clientX, clientY } = event;
   const shouldShow = isInNavigationArea(clientX, clientY);
 
@@ -146,9 +210,21 @@ document.addEventListener("mouseleave", () => {
   customCursor?.classList.remove("is-visible");
 });
 
-initSlideshows();
+function attachViewportListener() {
+  if (viewportListenerAttached) return;
+  viewportListenerAttached = true;
 
-const initialSection = window.location.hash.slice(1) || "jaehyun";
-if (document.getElementById(initialSection)) {
-  showSection(initialSection);
+  MOBILE_MEDIA.addEventListener("change", rebuildSlideshows);
 }
+
+function boot() {
+  attachViewportListener();
+  rebuildSlideshows();
+
+  const initialSection = window.location.hash.slice(1) || "jaehyun";
+  if (document.getElementById(initialSection)) {
+    showSection(initialSection);
+  }
+}
+
+boot();
