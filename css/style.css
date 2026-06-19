@@ -371,11 +371,11 @@ img {
   margin-top: 0.7em;
 }
 
-/* Smaller screens — Ted Min-style vertical scroll */
+/* Smaller screens — Sergio-style left/right tap navigation */
 @media (max-width: 768px) {
   html,
   body {
-    touch-action: pan-y;
+    touch-action: manipulation;
   }
 
   .sidebar {
@@ -405,41 +405,34 @@ img {
     font-size: 12px;
   }
 
-  .section {
-    display: none;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .section-active {
-    display: block;
-  }
-
   .hero-image {
-    position: static;
+    padding: 96px 20px 20px;
+    box-sizing: border-box;
+  }
+
+  .hero-slideshow .slide {
+    visibility: hidden;
+    transition: none;
+  }
+
+  .hero-slideshow .slide-active {
+    visibility: visible;
+    transition: none;
+  }
+
+  .hero-slideshow .slide img {
+    background-color: transparent;
+  }
+
+  #jaehyun.section-active .hero-nav.hero-nav-ready,
+  #work.section-active .hero-nav.hero-nav-ready {
     display: block;
-    width: 100%;
-    height: auto;
-    padding: 96px 20px 64px;
+    cursor: auto;
   }
 
-  .mobile-scroll-feed {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 56px;
-    width: 100%;
-  }
-
-  .mobile-scroll-feed img {
-    width: auto;
-    max-width: 92vw;
-    height: auto;
-    object-fit: contain;
-  }
-
-  .hero-nav {
-    display: none !important;
+  .hero-zone {
+    cursor: auto;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .custom-cursor {
