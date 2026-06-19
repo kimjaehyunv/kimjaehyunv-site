@@ -129,6 +129,43 @@ function createViewer(sectionId) {
     return section.querySelectorAll(".hero-slideshow .slide");
   }
 
+  function prepareSlideImages(slide) {
+    if (!slide) return Promise.resolve();
+
+    const images = [...slide.querySelectorAll("img")];
+    images.forEach((img) => {
+      img.loading = "eager";
+    });
+
+    return Promise.all(
+      images.map((img) => {
+        if (img.complete) {
+          return img.decode?.().catch(() => undefined) ?? Promise.resolve();
+        }
+
+        return new Promise((resolve) => {
+          img.addEventListener("load", () => resolve(), { once: true });
+          img.addEventListener("error", () => resolve(), { once: true });
+        });
+      }),
+    );
+  }
+
+  function preloadAdjacentSlides(index) {
+    const slides = getSlides();
+    if (!slides.length) return;
+
+    const neighbors = [
+      index,
+      (index - 1 + slides.length) % slides.length,
+      (index + 1) % slides.length,
+    ];
+
+    neighbors.forEach((slideIndex) => {
+      prepareSlideImages(slides[slideIndex]);
+    });
+  }
+
   function showSlide(index) {
     const slides = getSlides();
     if (!slides.length) return;
@@ -138,26 +175,29 @@ function createViewer(sectionId) {
     });
     currentSlide = index;
 
-    const activeImg = slides[index]?.querySelector("img");
-    if (activeImg) {
-      activeImg.loading = "eager";
-    }
+    preloadAdjacentSlides(index);
 
     if (sectionId === "work") {
       window.scheduleWorkSpreadSync?.();
     }
   }
 
-  function goPrev() {
+  async function goPrev() {
     const slides = getSlides();
     if (!slides.length) return;
-    showSlide((currentSlide - 1 + slides.length) % slides.length);
+
+    const nextIndex = (currentSlide - 1 + slides.length) % slides.length;
+    await prepareSlideImages(slides[nextIndex]);
+    showSlide(nextIndex);
   }
 
-  function goNext() {
+  async function goNext() {
     const slides = getSlides();
     if (!slides.length) return;
-    showSlide((currentSlide + 1) % slides.length);
+
+    const nextIndex = (currentSlide + 1) % slides.length;
+    await prepareSlideImages(slides[nextIndex]);
+    showSlide(nextIndex);
   }
 
   prevZone.onclick = () => {
@@ -170,6 +210,7 @@ function createViewer(sectionId) {
 
   const slideCount = getSlides().length;
   setNavReady(sectionId, slideCount > 0);
+  preloadAdjacentSlides(0);
 
   return {
     section,
