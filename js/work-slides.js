@@ -63,8 +63,6 @@ let workSpreadSyncScheduled = false;
 let workSpreadResizeAttached = false;
 
 function syncWorkSpreadGrids() {
-  if (isMobileView()) return;
-
   const upperSlide = document.querySelector("#work .slide-work-spread-upper");
   const lowerGrid = document.querySelector("#work .work-spread-grid-lower");
   if (!upperSlide || !lowerGrid) return;
@@ -109,37 +107,10 @@ function watchWorkSpreadImages(container) {
   });
 }
 
-function flattenWorkSequence(sequence) {
-  const flat = [];
-
-  sequence.forEach((slideData) => {
-    if (slideData.type === "single") {
-      flat.push({ ...slideData });
-      return;
-    }
-
-    slideData.files.forEach((file) => {
-      flat.push({ type: "single", files: [file] });
-    });
-  });
-
-  return flat;
-}
-
-function getWorkImageFiles() {
-  return flattenWorkSequence(WORK_SLIDE_SEQUENCE).map(
-    (slideData) => slideData.files[0],
-  );
-}
-
-function buildWorkSlideshow(container, options = {}) {
+function buildWorkSlideshow(container) {
   container.className = "hero-slideshow";
 
-  const sequence = options.mobile
-    ? flattenWorkSequence(WORK_SLIDE_SEQUENCE)
-    : WORK_SLIDE_SEQUENCE;
-
-  sequence.forEach((slideData, index) => {
+  WORK_SLIDE_SEQUENCE.forEach((slideData, index) => {
     const slide = document.createElement("div");
     slide.className = "slide";
 
@@ -161,10 +132,6 @@ function buildWorkSlideshow(container, options = {}) {
     container.appendChild(slide);
   });
 
-  if (options.mobile) {
-    return sequence.length;
-  }
-
   watchWorkSpreadImages(container);
   scheduleWorkSpreadSync();
 
@@ -173,5 +140,5 @@ function buildWorkSlideshow(container, options = {}) {
     window.addEventListener("resize", scheduleWorkSpreadSync);
   }
 
-  return sequence.length;
+  return WORK_SLIDE_SEQUENCE.length;
 }

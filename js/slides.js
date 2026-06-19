@@ -37,37 +37,10 @@ function createSlideImage(file) {
   return img;
 }
 
-function flattenJaehyunSequence(sequence) {
-  const flat = [];
-
-  sequence.forEach((slideData) => {
-    if (slideData.type === "single") {
-      flat.push({ ...slideData });
-      return;
-    }
-
-    slideData.files.forEach((file) => {
-      flat.push({ type: "single", files: [file] });
-    });
-  });
-
-  return flat;
-}
-
-function getJaehyunImageFiles() {
-  return flattenJaehyunSequence(JAEHYUN_SLIDE_SEQUENCE).map(
-    (slideData) => slideData.files[0],
-  );
-}
-
-function buildHeroSlideshow(container, options = {}) {
+function buildHeroSlideshow(container) {
   container.className = "hero-slideshow";
 
-  const sequence = options.mobile
-    ? flattenJaehyunSequence(JAEHYUN_SLIDE_SEQUENCE)
-    : JAEHYUN_SLIDE_SEQUENCE;
-
-  sequence.forEach((slideData, index) => {
+  JAEHYUN_SLIDE_SEQUENCE.forEach((slideData, index) => {
     const slide = document.createElement("div");
     slide.className = "slide";
 
