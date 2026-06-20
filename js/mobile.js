@@ -7,6 +7,7 @@ function isMobileView() {
 function isMobileSpreadSlide(slide) {
   return (
     slide?.classList.contains("slide-work-spread") ||
+    slide?.classList.contains("slide-work-spread-pair-vertical") ||
     slide?.classList.contains("slide-contact-sheet") ||
     slide?.classList.contains("slide-pair-asymmetric")
   );
@@ -165,7 +166,7 @@ function initMobileSlideshows(viewers, setNavReady) {
 
   const workContainer = document.querySelector("#work .hero-slideshow");
   if (workContainer) {
-    buildWorkSlideshow(workContainer, { mobile: false });
+    buildWorkSlideshow(workContainer, { mobile: false, workMobile: true });
     classifyMobileSlideshowImages(workContainer);
     const workViewer = createMobileViewer("work", setNavReady);
     if (workViewer) viewers.set("work", workViewer);

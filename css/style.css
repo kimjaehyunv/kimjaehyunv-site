@@ -588,6 +588,34 @@ img {
     align-self: center;
   }
 
+  #work .hero-slideshow .slide-single img.img-portrait {
+    max-width: 94.3vw;
+    max-height: 89.7vh;
+  }
+
+  #work .slide-work-spread-pair-vertical .work-spread-grid-vertical {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    row-gap: 10px;
+    width: 100%;
+    max-width: calc(100vw - 40px);
+    margin: 0 auto;
+    place-content: center;
+    justify-items: center;
+    align-items: center;
+  }
+
+  #work .slide-work-spread-pair-vertical .work-spread-grid-vertical img {
+    width: auto;
+    height: auto;
+    max-width: calc(100vw - 40px);
+    max-height: calc((100vh - 116px - 10px) / 2);
+    object-fit: contain;
+    justify-self: center;
+    align-self: center;
+  }
+
   #jaehyun.section-active .hero-nav.hero-nav-ready,
   #work.section-active .hero-nav.hero-nav-ready {
     display: block;

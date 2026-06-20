@@ -62,6 +62,9 @@ function buildWorkSpreadSlide(slide, slideData, lazy) {
   } else if (slideData.type === "work-spread-quad") {
     slide.classList.add("slide-work-spread-quad");
     grid.classList.add("work-spread-grid-quad");
+  } else if (slideData.type === "work-spread-pair-vertical") {
+    slide.classList.add("slide-work-spread-pair-vertical");
+    grid.classList.add("work-spread-grid-vertical");
   }
 
   slideData.files.forEach((file) => {
@@ -144,12 +147,37 @@ function getWorkImageFiles() {
   );
 }
 
+function prepareWorkMobileSequence(sequence) {
+  const result = [];
+
+  sequence.forEach((slideData) => {
+    if (slideData.type === "work-spread-quad") {
+      result.push({
+        type: "work-spread-pair-vertical",
+        files: [slideData.files[0], slideData.files[1]],
+      });
+      result.push({
+        type: "work-spread-pair-vertical",
+        files: [slideData.files[2], slideData.files[3]],
+      });
+      return;
+    }
+
+    result.push(slideData);
+  });
+
+  return result;
+}
+
 function buildWorkSlideshow(container, options = {}) {
   container.className = "hero-slideshow";
 
-  const sequence = options.mobile
-    ? flattenWorkSequence(WORK_SLIDE_SEQUENCE)
-    : WORK_SLIDE_SEQUENCE;
+  let sequence = WORK_SLIDE_SEQUENCE;
+  if (options.workMobile) {
+    sequence = prepareWorkMobileSequence(WORK_SLIDE_SEQUENCE);
+  } else if (options.mobile) {
+    sequence = flattenWorkSequence(WORK_SLIDE_SEQUENCE);
+  }
 
   sequence.forEach((slideData, index) => {
     const slide = document.createElement("div");
@@ -165,7 +193,8 @@ function buildWorkSlideshow(container, options = {}) {
     } else if (
       slideData.type === "work-spread" ||
       slideData.type === "work-spread-lower" ||
-      slideData.type === "work-spread-quad"
+      slideData.type === "work-spread-quad" ||
+      slideData.type === "work-spread-pair-vertical"
     ) {
       buildWorkSpreadSlide(slide, slideData, index !== 0);
     }
