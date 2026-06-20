@@ -459,6 +459,21 @@ img {
     max-height: 78vh;
   }
 
+  #jaehyun .hero-slideshow .slide-lower-left img {
+    max-width: 25.5vw;
+    max-height: 25.5vh;
+  }
+
+  #jaehyun .hero-slideshow .slide-lower-left img.img-portrait {
+    max-width: 69.7vw;
+    max-height: 66.3vh;
+  }
+
+  #jaehyun .hero-slideshow .slide-lower-left img.mobile-landscape {
+    max-width: 81.6vw;
+    max-height: 52.7vh;
+  }
+
   .hero-slideshow .slide {
     visibility: hidden;
     transition: none;
