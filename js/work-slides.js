@@ -75,6 +75,8 @@ let workSpreadSyncScheduled = false;
 let workSpreadResizeAttached = false;
 
 function syncWorkSpreadGrids() {
+  if (typeof isMobileView === "function" && isMobileView()) return;
+
   const upperSlide = document.querySelector("#work .slide-work-spread-upper");
   const lowerGrid = document.querySelector("#work .work-spread-grid-lower");
   if (!upperSlide || !lowerGrid) return;
