@@ -74,12 +74,32 @@ function getJaehyunImageFiles() {
   );
 }
 
+function splitPairSpacedOnly(sequence) {
+  const result = [];
+
+  sequence.forEach((slideData) => {
+    if (slideData.type === "pair-spaced") {
+      slideData.files.forEach((file) => {
+        result.push({ type: "single", files: [file] });
+      });
+      return;
+    }
+
+    result.push(slideData);
+  });
+
+  return result;
+}
+
 function buildHeroSlideshow(container, options = {}) {
   container.className = "hero-slideshow";
 
-  const sequence = options.mobile
-    ? flattenJaehyunSequence(JAEHYUN_SLIDE_SEQUENCE)
-    : JAEHYUN_SLIDE_SEQUENCE;
+  let sequence = JAEHYUN_SLIDE_SEQUENCE;
+  if (options.mobile) {
+    sequence = flattenJaehyunSequence(JAEHYUN_SLIDE_SEQUENCE);
+  } else if (options.splitPairSpaced) {
+    sequence = splitPairSpacedOnly(JAEHYUN_SLIDE_SEQUENCE);
+  }
 
   sequence.forEach((slideData, index) => {
     const slide = document.createElement("div");
