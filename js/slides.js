@@ -86,9 +86,12 @@ function buildHeroSlideshow(container, options = {}) {
       slide.appendChild(createSlideImage(slideData.files[0]));
     } else if (slideData.type === "contact-sheet") {
       slide.classList.add("slide-contact-sheet");
+      const grid = document.createElement("div");
+      grid.className = "contact-sheet-grid";
       slideData.files.forEach((file) => {
-        slide.appendChild(createSlideImage(file));
+        grid.appendChild(createSlideImage(file));
       });
+      slide.appendChild(grid);
     } else if (slideData.type === "pair-spaced") {
       slide.classList.add("slide-pair-asymmetric");
       const spread = document.createElement("div");

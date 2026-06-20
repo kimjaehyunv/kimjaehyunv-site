@@ -4,6 +4,44 @@ function isMobileView() {
   return MOBILE_MEDIA.matches;
 }
 
+function isMobileSpreadSlide(slide) {
+  return (
+    slide?.classList.contains("slide-work-spread") ||
+    slide?.classList.contains("slide-contact-sheet") ||
+    slide?.classList.contains("slide-pair-asymmetric")
+  );
+}
+
+function classifyMobileImageOrientation(img) {
+  if (!isMobileView()) {
+    img.classList.remove("mobile-landscape");
+    return;
+  }
+
+  const slide = img.closest(".slide");
+  if (!slide || isMobileSpreadSlide(slide)) return;
+
+  const apply = () => {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    img.classList.toggle(
+      "mobile-landscape",
+      img.naturalWidth > img.naturalHeight,
+    );
+  };
+
+  if (img.complete) {
+    apply();
+  } else {
+    img.addEventListener("load", apply, { once: true });
+  }
+}
+
+function classifyMobileSlideshowImages(container) {
+  if (!container || !isMobileView()) return;
+
+  container.querySelectorAll("img").forEach(classifyMobileImageOrientation);
+}
+
 function prepareMobileSlideImages(slide) {
   if (!slide) return Promise.resolve();
 
@@ -15,11 +53,19 @@ function prepareMobileSlideImages(slide) {
   return Promise.all(
     images.map((img) => {
       if (img.complete) {
+        classifyMobileImageOrientation(img);
         return img.decode?.().catch(() => undefined) ?? Promise.resolve();
       }
 
       return new Promise((resolve) => {
-        img.addEventListener("load", () => resolve(), { once: true });
+        img.addEventListener(
+          "load",
+          () => {
+            classifyMobileImageOrientation(img);
+            resolve();
+          },
+          { once: true },
+        );
         img.addEventListener("error", () => resolve(), { once: true });
       });
     }),
@@ -112,6 +158,7 @@ function initMobileSlideshows(viewers, setNavReady) {
   const jaehyunContainer = document.querySelector("#jaehyun .hero-slideshow");
   if (jaehyunContainer) {
     buildHeroSlideshow(jaehyunContainer, { mobile: false });
+    classifyMobileSlideshowImages(jaehyunContainer);
     const jaehyunViewer = createMobileViewer("jaehyun", setNavReady);
     if (jaehyunViewer) viewers.set("jaehyun", jaehyunViewer);
   }
@@ -119,6 +166,7 @@ function initMobileSlideshows(viewers, setNavReady) {
   const workContainer = document.querySelector("#work .hero-slideshow");
   if (workContainer) {
     buildWorkSlideshow(workContainer, { mobile: false });
+    classifyMobileSlideshowImages(workContainer);
     const workViewer = createMobileViewer("work", setNavReady);
     if (workViewer) viewers.set("work", workViewer);
   }

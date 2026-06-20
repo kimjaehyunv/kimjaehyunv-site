@@ -1,10 +1,6 @@
 const sectionLinks = document.querySelectorAll("[data-section]");
 const menuLinks = document.querySelectorAll(".menu-link");
 const sections = document.querySelectorAll(".section");
-const sidebar = document.querySelector(".sidebar");
-const customCursor = document.querySelector(".custom-cursor");
-const cursorArrowLeft = document.querySelector(".custom-cursor-arrow-left");
-const cursorArrowRight = document.querySelector(".custom-cursor-arrow-right");
 
 const viewers = new Map();
 let viewportListenerAttached = false;
@@ -238,49 +234,6 @@ function rebuildSlideshows() {
 
   showSection(activeSection);
 }
-
-function isOverSidebar(x, y) {
-  if (!sidebar) return false;
-  const rect = sidebar.getBoundingClientRect();
-  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-}
-
-function isInNavigationArea(x, y) {
-  if (isMobileView()) return false;
-
-  const activeViewer = Array.from(viewers.values()).find((viewer) => {
-    return (
-      viewer.section.classList.contains("section-active") &&
-      viewer.getSlides().length > 0
-    );
-  });
-
-  return Boolean(activeViewer) && !isOverSidebar(x, y);
-}
-
-function setCursorDirection(x) {
-  const isLeft = x < window.innerWidth / 2;
-  cursorArrowLeft?.classList.toggle("is-active", isLeft);
-  cursorArrowRight?.classList.toggle("is-active", !isLeft);
-}
-
-document.addEventListener("mousemove", (event) => {
-  if (isMobileView()) return;
-
-  const { clientX, clientY } = event;
-  const shouldShow = isInNavigationArea(clientX, clientY);
-
-  customCursor?.classList.toggle("is-visible", shouldShow);
-
-  if (shouldShow) {
-    customCursor.style.transform = `translate3d(${clientX}px, ${clientY}px, 0) translate(-50%, -50%)`;
-    setCursorDirection(clientX);
-  }
-});
-
-document.addEventListener("mouseleave", () => {
-  customCursor?.classList.remove("is-visible");
-});
 
 function attachViewportListener() {
   if (viewportListenerAttached) return;

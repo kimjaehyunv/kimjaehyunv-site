@@ -46,8 +46,8 @@ img {
 
 .site-title {
   font-size: 17px;
-  font-weight: 400;
-  letter-spacing: 0.2em;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   line-height: 1.3;
   color: #000000;
 }
@@ -67,7 +67,7 @@ img {
 
 .menu-link {
   font-size: 12px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.07em;
   color: #999999;
   transition: color 0.25s ease;
   cursor: pointer;
@@ -196,10 +196,18 @@ img {
 }
 
 .hero-slideshow .slide-contact-sheet {
+  gap: 0;
+}
+
+.hero-slideshow .contact-sheet-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
 }
 
-.hero-slideshow .slide-contact-sheet img {
+.hero-slideshow .contact-sheet-grid img {
   width: auto;
   height: 24vh;
   max-height: 24vh;
@@ -281,7 +289,6 @@ img {
 #jaehyun.section-active .hero-nav.hero-nav-ready,
 #work.section-active .hero-nav.hero-nav-ready {
   display: block;
-  cursor: none;
 }
 
 .hero-zone {
@@ -291,39 +298,16 @@ img {
   height: 100%;
   border: none;
   background: transparent;
-  cursor: none;
 }
 
 .hero-zone-prev {
   left: 0;
+  cursor: w-resize;
 }
 
 .hero-zone-next {
   right: 0;
-}
-
-.custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100;
-  pointer-events: none;
-  opacity: 0;
-  will-change: transform;
-}
-
-.custom-cursor.is-visible {
-  opacity: 1;
-}
-
-.custom-cursor-arrow {
-  display: none;
-  width: 22px;
-  height: 22px;
-}
-
-.custom-cursor-arrow.is-active {
-  display: block;
+  cursor: e-resize;
 }
 
 /* Text panels for Info */
@@ -393,6 +377,9 @@ img {
 
   .site-title {
     font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.3;
   }
 
   .menu {
@@ -410,6 +397,22 @@ img {
     box-sizing: border-box;
   }
 
+  .hero-image:has(.slide-active img.mobile-landscape) {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .hero-slideshow .slide-single img.mobile-landscape,
+  .hero-slideshow .slide-opening img.mobile-landscape,
+  .hero-slideshow .slide-closing img.mobile-landscape,
+  .hero-slideshow .slide-reduced img.mobile-landscape,
+  .hero-slideshow .slide-reduced-forty img.mobile-landscape,
+  .hero-slideshow .slide-small img.mobile-landscape,
+  .hero-slideshow .slide-lower-left img.mobile-landscape {
+    max-width: 96vw;
+    max-height: 62vh;
+  }
+
   .hero-slideshow .slide {
     visibility: hidden;
     transition: none;
@@ -424,19 +427,33 @@ img {
     background-color: transparent;
   }
 
+  #jaehyun .hero-slideshow .contact-sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, auto);
+    gap: 5px;
+    width: 100%;
+    max-width: calc(100vw - 40px);
+    margin: 0 auto;
+    place-content: center;
+  }
+
+  #jaehyun .hero-slideshow .contact-sheet-grid img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 22vh;
+    object-fit: contain;
+    justify-self: center;
+  }
+
   #jaehyun.section-active .hero-nav.hero-nav-ready,
   #work.section-active .hero-nav.hero-nav-ready {
     display: block;
-    cursor: auto;
   }
 
   .hero-zone {
-    cursor: auto;
     -webkit-tap-highlight-color: transparent;
-  }
-
-  .custom-cursor {
-    display: none;
   }
 
   .info-panel {
