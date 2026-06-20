@@ -14,6 +14,7 @@ const WORK_SLIDE_SEQUENCE = [
   { type: "single", files: ["17.jpg"] },
   { type: "single", files: ["18.jpg"] },
   { type: "single", files: ["19.jpg"] },
+  { type: "single", files: ["19a.jpg"] },
   { type: "work-spread-quad", files: ["20.jpg", "21.jpg", "22.jpg", "23.jpg"] },
   { type: "single", files: ["24.jpg"] },
   { type: "single", files: ["25.jpg"] },

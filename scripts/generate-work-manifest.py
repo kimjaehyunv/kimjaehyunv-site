@@ -167,8 +167,10 @@ function buildWorkSlideshow(container, options = {{}}) {{
 
 
 def sort_key(name: str):
-    match = re.match(r"(\d+)", name)
-    return int(match.group(1)) if match else name
+    match = re.match(r"(\d+)(a)?", name, re.I)
+    if match:
+        return (int(match.group(1)), 1 if match.group(2) else 0, name.lower())
+    return (999, 0, name.lower())
 
 
 def spread_insert_index(file_list, first_file, removed_before):
