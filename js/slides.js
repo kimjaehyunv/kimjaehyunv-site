@@ -30,10 +30,24 @@ const JAEHYUN_SLIDE_SEQUENCE = [
   { type: "single", files: ["31.jpg"], variant: "closing" },
 ];
 
+function classifyPortraitImage(img) {
+  const apply = () => {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    img.classList.toggle("img-portrait", img.naturalHeight >= img.naturalWidth);
+  };
+
+  if (img.complete) {
+    apply();
+  } else {
+    img.addEventListener("load", apply, { once: true });
+  }
+}
+
 function createSlideImage(file) {
   const img = document.createElement("img");
   img.src = `${IMAGE_DIR}${file}`;
   img.alt = "Photograph by Jaehyun Kim";
+  classifyPortraitImage(img);
   return img;
 }
 

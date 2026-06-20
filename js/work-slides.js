@@ -27,6 +27,19 @@ const WORK_SLIDE_SEQUENCE = [
   { type: "single", files: ["31.jpg"] },
 ];
 
+function classifyPortraitImage(img) {
+  const apply = () => {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    img.classList.toggle("img-portrait", img.naturalHeight >= img.naturalWidth);
+  };
+
+  if (img.complete) {
+    apply();
+  } else {
+    img.addEventListener("load", apply, { once: true });
+  }
+}
+
 function createWorkSlideImage(file, lazy = true) {
   const img = document.createElement("img");
   img.src = `${WORK_IMAGE_DIR}${file}`;
@@ -34,6 +47,7 @@ function createWorkSlideImage(file, lazy = true) {
   if (lazy) {
     img.loading = "lazy";
   }
+  classifyPortraitImage(img);
   return img;
 }
 
