@@ -74,14 +74,12 @@ function getJaehyunImageFiles() {
   );
 }
 
-function splitPairSpacedOnly(sequence) {
+function prepareJaehyunMobileSequence(sequence) {
   const result = [];
 
   sequence.forEach((slideData) => {
     if (slideData.type === "pair-spaced") {
-      slideData.files.forEach((file) => {
-        result.push({ type: "single", files: [file] });
-      });
+      result.push({ type: "single", files: [slideData.files[0]] });
       return;
     }
 
@@ -97,8 +95,8 @@ function buildHeroSlideshow(container, options = {}) {
   let sequence = JAEHYUN_SLIDE_SEQUENCE;
   if (options.mobile) {
     sequence = flattenJaehyunSequence(JAEHYUN_SLIDE_SEQUENCE);
-  } else if (options.splitPairSpaced) {
-    sequence = splitPairSpacedOnly(JAEHYUN_SLIDE_SEQUENCE);
+  } else if (options.jaehyunMobile) {
+    sequence = prepareJaehyunMobileSequence(JAEHYUN_SLIDE_SEQUENCE);
   }
 
   sequence.forEach((slideData, index) => {
@@ -117,6 +115,11 @@ function buildHeroSlideshow(container, options = {}) {
       if (slideData.variant === "lower-left") slide.classList.add("slide-lower-left");
       if (slideData.variant === "reduced") slide.classList.add("slide-reduced");
       if (slideData.variant === "reduced-forty") slide.classList.add("slide-reduced-forty");
+      if (options.jaehyunMobile) {
+        const file = slideData.files[0];
+        if (file === "12.JPG") slide.classList.add("slide-jaehyun-12");
+        if (file === "15.jpg") slide.classList.add("slide-jaehyun-15");
+      }
       slide.appendChild(createSlideImage(slideData.files[0]));
     } else if (slideData.type === "contact-sheet") {
       slide.classList.add("slide-contact-sheet");

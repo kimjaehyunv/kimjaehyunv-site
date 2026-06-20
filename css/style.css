@@ -474,6 +474,24 @@ img {
     max-height: 52.7vh;
   }
 
+  #jaehyun .hero-slideshow .slide-jaehyun-12 img,
+  #jaehyun .hero-slideshow .slide-jaehyun-15 img {
+    max-width: 63.75vw;
+    max-height: 63.75vh;
+  }
+
+  #jaehyun .hero-slideshow .slide-jaehyun-12 img.img-portrait,
+  #jaehyun .hero-slideshow .slide-jaehyun-15 img.img-portrait {
+    max-width: 69.7vw;
+    max-height: 66.3vh;
+  }
+
+  #jaehyun .hero-slideshow .slide-jaehyun-12 img.mobile-landscape,
+  #jaehyun .hero-slideshow .slide-jaehyun-15 img.mobile-landscape {
+    max-width: 81.6vw;
+    max-height: 52.7vh;
+  }
+
   .hero-slideshow .slide {
     visibility: hidden;
     transition: none;

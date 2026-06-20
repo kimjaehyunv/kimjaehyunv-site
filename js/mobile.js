@@ -157,7 +157,7 @@ function createMobileViewer(sectionId, setNavReady) {
 function initMobileSlideshows(viewers, setNavReady) {
   const jaehyunContainer = document.querySelector("#jaehyun .hero-slideshow");
   if (jaehyunContainer) {
-    buildHeroSlideshow(jaehyunContainer, { mobile: false, splitPairSpaced: true });
+    buildHeroSlideshow(jaehyunContainer, { mobile: false, jaehyunMobile: true });
     classifyMobileSlideshowImages(jaehyunContainer);
     const jaehyunViewer = createMobileViewer("jaehyun", setNavReady);
     if (jaehyunViewer) viewers.set("jaehyun", jaehyunViewer);
