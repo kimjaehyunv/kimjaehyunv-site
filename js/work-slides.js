@@ -2,8 +2,6 @@ const WORK_IMAGE_DIR = "images/work/";
 
 const WORK_SLIDE_SEQUENCE = [
   { type: "single", files: ["01.jpg"] },
-  { type: "single", files: ["02.jpg"] },
-  { type: "single", files: ["03.jpg"] },
   { type: "single", files: ["04.jpg"] },
   { type: "single", files: ["05.jpg"] },
   { type: "work-spread", files: ["06.jpg", "07.jpg", "08.jpg", "09.jpg"] },

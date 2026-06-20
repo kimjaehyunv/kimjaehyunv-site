@@ -15,6 +15,7 @@ SPREAD_UPPER = ["06.jpg", "07.jpg", "08.jpg", "09.jpg"]
 SPREAD_LOWER = ["10.jpg", "11.jpg"]
 SPREAD_QUAD = ["20.jpg", "21.jpg", "22.jpg", "23.jpg"]
 SPREAD_FILES = set(SPREAD_UPPER + SPREAD_LOWER + SPREAD_QUAD)
+EXCLUDED_FILES = {"02.jpg", "03.jpg"}
 
 WORK_SLIDES_TEMPLATE = '''const WORK_IMAGE_DIR = "images/work/";
 
@@ -195,7 +196,9 @@ files = sorted(
     [
         path.name
         for path in WORK_DIR.iterdir()
-        if path.is_file() and path.suffix.lower() in EXTENSIONS
+        if path.is_file()
+        and path.suffix.lower() in EXTENSIONS
+        and path.name not in EXCLUDED_FILES
     ],
     key=sort_key,
 )
