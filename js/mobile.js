@@ -109,6 +109,10 @@ function createMobileViewer(sectionId, setNavReady) {
     });
     currentSlide = index;
 
+    if (sectionId === "jaehyun") {
+      syncJaehyunSlideWindow(section.querySelector(".hero-slideshow"), index);
+    }
+
     preloadAdjacentSlides(index);
 
     if (sectionId === "work") {
@@ -121,6 +125,11 @@ function createMobileViewer(sectionId, setNavReady) {
     if (!slides.length) return;
 
     const nextIndex = (currentSlide - 1 + slides.length) % slides.length;
+
+    if (sectionId === "jaehyun") {
+      syncJaehyunSlideWindow(section.querySelector(".hero-slideshow"), nextIndex);
+    }
+
     await prepareMobileSlideImages(slides[nextIndex]);
     showSlide(nextIndex);
   }
@@ -130,6 +139,11 @@ function createMobileViewer(sectionId, setNavReady) {
     if (!slides.length) return;
 
     const nextIndex = (currentSlide + 1) % slides.length;
+
+    if (sectionId === "jaehyun") {
+      syncJaehyunSlideWindow(section.querySelector(".hero-slideshow"), nextIndex);
+    }
+
     await prepareMobileSlideImages(slides[nextIndex]);
     showSlide(nextIndex);
   }
@@ -159,11 +173,9 @@ function initMobileSlideshows(viewers, setNavReady) {
   const jaehyunContainer = document.querySelector("#jaehyun .hero-slideshow");
   if (jaehyunContainer) {
     buildHeroSlideshow(jaehyunContainer, { mobile: false, jaehyunMobile: true });
-    classifyMobileSlideshowImages(jaehyunContainer);
     const jaehyunViewer = createMobileViewer("jaehyun", setNavReady);
     if (jaehyunViewer) viewers.set("jaehyun", jaehyunViewer);
   }
-
 }
 
 function initWorkMobileSlideshow(viewers, setNavReady) {
@@ -188,6 +200,15 @@ function restoreMobileSlideBySrc(sectionId, src, viewers) {
 
   const viewer = viewers.get(sectionId);
   if (!viewer) return;
+
+  if (sectionId === "jaehyun") {
+    const container = viewer.section.querySelector(".hero-slideshow");
+    const index = findJaehyunSlideIndexBySrc(container, src);
+    if (index >= 0) {
+      viewer.showSlide(index);
+    }
+    return;
+  }
 
   const slides = viewer.getSlides();
   const index = Array.from(slides).findIndex(

@@ -34,6 +34,15 @@ function restoreSlideBySrc(sectionId, src) {
   const viewer = viewers.get(sectionId);
   if (!viewer) return;
 
+  if (sectionId === "jaehyun") {
+    const container = viewer.section.querySelector(".hero-slideshow");
+    const index = findJaehyunSlideIndexBySrc(container, src);
+    if (index >= 0) {
+      viewer.showSlide(index);
+    }
+    return;
+  }
+
   const slides = viewer.getSlides();
   const index = Array.from(slides).findIndex(
     (slide) => slide.querySelector("img")?.getAttribute("src") === src,
@@ -170,6 +179,10 @@ function createViewer(sectionId) {
     });
     currentSlide = index;
 
+    if (sectionId === "jaehyun") {
+      syncJaehyunSlideWindow(section.querySelector(".hero-slideshow"), index);
+    }
+
     preloadAdjacentSlides(index);
 
     if (sectionId === "work") {
@@ -182,6 +195,11 @@ function createViewer(sectionId) {
     if (!slides.length) return;
 
     const nextIndex = (currentSlide - 1 + slides.length) % slides.length;
+
+    if (sectionId === "jaehyun") {
+      syncJaehyunSlideWindow(section.querySelector(".hero-slideshow"), nextIndex);
+    }
+
     await prepareSlideImages(slides[nextIndex]);
     showSlide(nextIndex);
   }
@@ -191,6 +209,11 @@ function createViewer(sectionId) {
     if (!slides.length) return;
 
     const nextIndex = (currentSlide + 1) % slides.length;
+
+    if (sectionId === "jaehyun") {
+      syncJaehyunSlideWindow(section.querySelector(".hero-slideshow"), nextIndex);
+    }
+
     await prepareSlideImages(slides[nextIndex]);
     showSlide(nextIndex);
   }

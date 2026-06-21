@@ -43,13 +43,10 @@ function classifyPortraitImage(img) {
   }
 }
 
-function createSlideImage(file, lazy = true) {
+function createSlideImage(file) {
   const img = document.createElement("img");
   img.src = `${IMAGE_DIR}${file}`;
   img.alt = "Photograph by Jaehyun Kim";
-  if (lazy) {
-    img.loading = "lazy";
-  }
   classifyPortraitImage(img);
   return img;
 }
@@ -92,6 +89,103 @@ function prepareJaehyunMobileSequence(sequence) {
   return result;
 }
 
+function applyJaehyunSlideShellClasses(slide, slideData, options) {
+  if (slideData.type === "single") {
+    slide.classList.add("slide-single");
+    if (slideData.variant === "small") slide.classList.add("slide-small");
+    if (slideData.variant === "closing") slide.classList.add("slide-closing");
+    if (slideData.variant === "opening") slide.classList.add("slide-opening");
+    if (slideData.variant === "lower-left") slide.classList.add("slide-lower-left");
+    if (slideData.variant === "reduced") slide.classList.add("slide-reduced");
+    if (slideData.variant === "reduced-forty") slide.classList.add("slide-reduced-forty");
+    if (options.jaehyunMobile) {
+      const file = slideData.files[0];
+      if (file === "12.JPG") slide.classList.add("slide-jaehyun-12");
+      if (file === "15.jpg") slide.classList.add("slide-jaehyun-15");
+    }
+    return;
+  }
+
+  if (slideData.type === "contact-sheet") {
+    slide.classList.add("slide-contact-sheet");
+    const grid = document.createElement("div");
+    grid.className = "contact-sheet-grid";
+    slide.appendChild(grid);
+    return;
+  }
+
+  if (slideData.type === "pair-spaced") {
+    slide.classList.add("slide-pair-asymmetric");
+    const spread = document.createElement("div");
+    spread.className = "pair-spread";
+    slide.appendChild(spread);
+  }
+}
+
+function mountJaehyunSlideImages(slide, slideData, options = {}) {
+  if (slide.dataset.imagesMounted === "true") return;
+
+  if (slideData.type === "single") {
+    slide.appendChild(createSlideImage(slideData.files[0]));
+  } else if (slideData.type === "contact-sheet") {
+    const grid = slide.querySelector(".contact-sheet-grid");
+    slideData.files.forEach((file) => {
+      grid.appendChild(createSlideImage(file));
+    });
+  } else if (slideData.type === "pair-spaced") {
+    const spread = slide.querySelector(".pair-spread");
+    slideData.files.forEach((file, fileIndex) => {
+      const img = createSlideImage(file);
+      img.classList.add(fileIndex === 0 ? "pair-image-a" : "pair-image-b");
+      spread.appendChild(img);
+    });
+  }
+
+  slide.dataset.imagesMounted = "true";
+
+  if (options.jaehyunMobile && typeof classifyMobileImageOrientation === "function") {
+    slide.querySelectorAll("img").forEach(classifyMobileImageOrientation);
+  }
+}
+
+function unmountJaehyunSlideImages(slide) {
+  if (slide.dataset.imagesMounted !== "true") return;
+
+  slide.querySelectorAll("img").forEach((img) => img.remove());
+  delete slide.dataset.imagesMounted;
+}
+
+function syncJaehyunSlideWindow(container, activeIndex) {
+  const sequence = container.jaehyunSequence;
+  const options = container.jaehyunOptions || {};
+  if (!sequence?.length) return;
+
+  const slides = container.querySelectorAll(".slide");
+  const length = sequence.length;
+  const mountIndices = new Set([
+    activeIndex,
+    (activeIndex - 1 + length) % length,
+    (activeIndex + 1) % length,
+  ]);
+
+  slides.forEach((slide, index) => {
+    if (mountIndices.has(index)) {
+      mountJaehyunSlideImages(slide, sequence[index], options);
+    } else {
+      unmountJaehyunSlideImages(slide);
+    }
+  });
+}
+
+function findJaehyunSlideIndexBySrc(container, src) {
+  if (!src || !container?.jaehyunSequence) return -1;
+
+  const file = src.split("/").pop();
+  return container.jaehyunSequence.findIndex((slideData) =>
+    slideData.files.includes(file),
+  );
+}
+
 function buildHeroSlideshow(container, options = {}) {
   container.className = "hero-slideshow";
 
@@ -102,6 +196,9 @@ function buildHeroSlideshow(container, options = {}) {
     sequence = prepareJaehyunMobileSequence(JAEHYUN_SLIDE_SEQUENCE);
   }
 
+  container.jaehyunSequence = sequence;
+  container.jaehyunOptions = options;
+
   sequence.forEach((slideData, index) => {
     const slide = document.createElement("div");
     slide.className = "slide";
@@ -110,40 +207,9 @@ function buildHeroSlideshow(container, options = {}) {
       slide.classList.add("slide-active");
     }
 
-    if (slideData.type === "single") {
-      slide.classList.add("slide-single");
-      if (slideData.variant === "small") slide.classList.add("slide-small");
-      if (slideData.variant === "closing") slide.classList.add("slide-closing");
-      if (slideData.variant === "opening") slide.classList.add("slide-opening");
-      if (slideData.variant === "lower-left") slide.classList.add("slide-lower-left");
-      if (slideData.variant === "reduced") slide.classList.add("slide-reduced");
-      if (slideData.variant === "reduced-forty") slide.classList.add("slide-reduced-forty");
-      if (options.jaehyunMobile) {
-        const file = slideData.files[0];
-        if (file === "12.JPG") slide.classList.add("slide-jaehyun-12");
-        if (file === "15.jpg") slide.classList.add("slide-jaehyun-15");
-      }
-      slide.appendChild(createSlideImage(slideData.files[0], index !== 0));
-    } else if (slideData.type === "contact-sheet") {
-      slide.classList.add("slide-contact-sheet");
-      const grid = document.createElement("div");
-      grid.className = "contact-sheet-grid";
-      slideData.files.forEach((file) => {
-        grid.appendChild(createSlideImage(file, index !== 0));
-      });
-      slide.appendChild(grid);
-    } else if (slideData.type === "pair-spaced") {
-      slide.classList.add("slide-pair-asymmetric");
-      const spread = document.createElement("div");
-      spread.className = "pair-spread";
-      slideData.files.forEach((file, fileIndex) => {
-        const img = createSlideImage(file, index !== 0);
-        img.classList.add(fileIndex === 0 ? "pair-image-a" : "pair-image-b");
-        spread.appendChild(img);
-      });
-      slide.appendChild(spread);
-    }
-
+    applyJaehyunSlideShellClasses(slide, slideData, options);
     container.appendChild(slide);
   });
+
+  syncJaehyunSlideWindow(container, 0);
 }
