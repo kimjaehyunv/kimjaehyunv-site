@@ -43,10 +43,13 @@ function classifyPortraitImage(img) {
   }
 }
 
-function createSlideImage(file) {
+function createSlideImage(file, lazy = true) {
   const img = document.createElement("img");
   img.src = `${IMAGE_DIR}${file}`;
   img.alt = "Photograph by Jaehyun Kim";
+  if (lazy) {
+    img.loading = "lazy";
+  }
   classifyPortraitImage(img);
   return img;
 }
@@ -120,13 +123,13 @@ function buildHeroSlideshow(container, options = {}) {
         if (file === "12.JPG") slide.classList.add("slide-jaehyun-12");
         if (file === "15.jpg") slide.classList.add("slide-jaehyun-15");
       }
-      slide.appendChild(createSlideImage(slideData.files[0]));
+      slide.appendChild(createSlideImage(slideData.files[0], index !== 0));
     } else if (slideData.type === "contact-sheet") {
       slide.classList.add("slide-contact-sheet");
       const grid = document.createElement("div");
       grid.className = "contact-sheet-grid";
       slideData.files.forEach((file) => {
-        grid.appendChild(createSlideImage(file));
+        grid.appendChild(createSlideImage(file, index !== 0));
       });
       slide.appendChild(grid);
     } else if (slideData.type === "pair-spaced") {
@@ -134,7 +137,7 @@ function buildHeroSlideshow(container, options = {}) {
       const spread = document.createElement("div");
       spread.className = "pair-spread";
       slideData.files.forEach((file, fileIndex) => {
-        const img = createSlideImage(file);
+        const img = createSlideImage(file, index !== 0);
         img.classList.add(fileIndex === 0 ? "pair-image-a" : "pair-image-b");
         spread.appendChild(img);
       });

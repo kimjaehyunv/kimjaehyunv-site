@@ -4,6 +4,7 @@ const sections = document.querySelectorAll(".section");
 
 const viewers = new Map();
 let viewportListenerAttached = false;
+let workSlideshowBuilt = false;
 
 function setNavReady(sectionId, ready) {
   const nav = document.getElementById(sectionId)?.querySelector(".hero-nav");
@@ -43,6 +44,36 @@ function restoreSlideBySrc(sectionId, src) {
   }
 }
 
+function preloadViewerAdjacentSlides(viewer) {
+  if (!viewer?.preloadAdjacentSlides) return;
+
+  const slides = viewer.getSlides();
+  const activeIndex = Array.from(slides).findIndex((slide) =>
+    slide.classList.contains("slide-active"),
+  );
+
+  if (activeIndex >= 0) {
+    viewer.preloadAdjacentSlides(activeIndex);
+  }
+}
+
+function ensureWorkSlideshow() {
+  if (workSlideshowBuilt) return;
+  workSlideshowBuilt = true;
+
+  if (isMobileView()) {
+    initWorkMobileSlideshow(viewers, setNavReady);
+    return;
+  }
+
+  const workContainer = document.querySelector("#work .hero-slideshow");
+  if (!workContainer) return;
+
+  buildWorkSlideshow(workContainer, { mobile: false });
+  const workViewer = createViewer("work");
+  if (workViewer) viewers.set("work", workViewer);
+}
+
 function showSection(sectionId) {
   sections.forEach((section) => {
     section.classList.toggle("section-active", section.id === sectionId);
@@ -52,18 +83,8 @@ function showSection(sectionId) {
     link.classList.toggle("active", link.dataset.section === sectionId);
   });
 
-  if (isMobileView()) {
-    const mobileViewer = viewers.get(sectionId);
-    if (mobileViewer) {
-      const activeImg = mobileViewer.section.querySelector(".slide-active img");
-      if (activeImg) {
-        activeImg.loading = "eager";
-      }
-    }
-    if (sectionId === "work") {
-      window.scheduleWorkSpreadSync?.();
-    }
-    return;
+  if (sectionId === "work") {
+    ensureWorkSlideshow();
   }
 
   const viewer = viewers.get(sectionId);
@@ -72,6 +93,7 @@ function showSection(sectionId) {
     if (activeImg) {
       activeImg.loading = "eager";
     }
+    preloadViewerAdjacentSlides(viewer);
   }
 
   if (sectionId === "work") {
@@ -183,7 +205,6 @@ function createViewer(sectionId) {
 
   const slideCount = getSlides().length;
   setNavReady(sectionId, slideCount > 0);
-  preloadAdjacentSlides(0);
 
   return {
     section,
@@ -191,6 +212,7 @@ function createViewer(sectionId) {
     showSlide,
     goNext,
     goPrev,
+    preloadAdjacentSlides,
   };
 }
 
@@ -202,12 +224,6 @@ function initDesktopSlideshows() {
     if (jaehyunViewer) viewers.set("jaehyun", jaehyunViewer);
   }
 
-  const workContainer = document.querySelector("#work .hero-slideshow");
-  if (workContainer) {
-    buildWorkSlideshow(workContainer, { mobile: false });
-    const workViewer = createViewer("work");
-    if (workViewer) viewers.set("work", workViewer);
-  }
 }
 
 function initSlideshows() {
@@ -219,20 +235,25 @@ function initSlideshows() {
   initDesktopSlideshows();
 }
 
-function rebuildSlideshows() {
+function rebuildSlideshows(options = {}) {
   const activeSection =
-    document.querySelector(".section-active")?.id ?? "jaehyun";
+    options.activeSection ??
+    document.querySelector(".section-active")?.id ??
+    "jaehyun";
   const jaehyunSrc = getActiveImageSrc("jaehyun");
-  const workSrc = getActiveImageSrc("work");
+  const workWasBuilt = workSlideshowBuilt;
+  const workSrc = workWasBuilt ? getActiveImageSrc("work") : null;
   document.querySelector("#jaehyun .hero-slideshow").innerHTML = "";
   document.querySelector("#work .hero-slideshow").innerHTML = "";
   viewers.clear();
+  workSlideshowBuilt = false;
 
   initSlideshows();
   restoreSlideBySrc("jaehyun", jaehyunSrc);
-  restoreSlideBySrc("work", workSrc);
-
   showSection(activeSection);
+  if (activeSection === "work" && workSrc) {
+    restoreSlideBySrc("work", workSrc);
+  }
 }
 
 function attachViewportListener() {
@@ -244,9 +265,13 @@ function attachViewportListener() {
 
 function boot() {
   attachViewportListener();
-  rebuildSlideshows();
 
   const initialSection = window.location.hash.slice(1) || "jaehyun";
+  const bootSection = document.getElementById(initialSection)
+    ? initialSection
+    : "jaehyun";
+  rebuildSlideshows({ activeSection: bootSection });
+
   if (document.getElementById(initialSection)) {
     showSection(initialSection);
   }

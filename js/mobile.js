@@ -144,7 +144,6 @@ function createMobileViewer(sectionId, setNavReady) {
 
   const slideCount = getSlides().length;
   setNavReady(sectionId, slideCount > 0);
-  preloadAdjacentSlides(0);
 
   return {
     section,
@@ -152,6 +151,7 @@ function createMobileViewer(sectionId, setNavReady) {
     showSlide,
     goNext,
     goPrev,
+    preloadAdjacentSlides,
   };
 }
 
@@ -164,13 +164,16 @@ function initMobileSlideshows(viewers, setNavReady) {
     if (jaehyunViewer) viewers.set("jaehyun", jaehyunViewer);
   }
 
+}
+
+function initWorkMobileSlideshow(viewers, setNavReady) {
   const workContainer = document.querySelector("#work .hero-slideshow");
-  if (workContainer) {
-    buildWorkSlideshow(workContainer, { mobile: false, workMobile: true });
-    classifyMobileSlideshowImages(workContainer);
-    const workViewer = createMobileViewer("work", setNavReady);
-    if (workViewer) viewers.set("work", workViewer);
-  }
+  if (!workContainer) return;
+
+  buildWorkSlideshow(workContainer, { mobile: false, workMobile: true });
+  classifyMobileSlideshowImages(workContainer);
+  const workViewer = createMobileViewer("work", setNavReady);
+  if (workViewer) viewers.set("work", workViewer);
 }
 
 function getMobileActiveImageSrc(sectionId) {
