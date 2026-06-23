@@ -39,15 +39,27 @@ function classifyPortraitImage(img) {
   }
 }
 
+function webpFilename(file) {
+  return file.replace(/\.(jpe?g)$/i, ".webp");
+}
+
 function createWorkSlideImage(file, lazy = true) {
+  const picture = document.createElement("picture");
+  const source = document.createElement("source");
+  source.srcset = `${WORK_IMAGE_DIR}${webpFilename(file)}`;
+  source.type = "image/webp";
+
   const img = document.createElement("img");
   img.src = `${WORK_IMAGE_DIR}${file}`;
   img.alt = "Work by Jaehyun Kim";
   if (lazy) {
     img.loading = "lazy";
   }
+
+  picture.appendChild(source);
+  picture.appendChild(img);
   classifyPortraitImage(img);
-  return img;
+  return picture;
 }
 
 function buildWorkSpreadSlide(slide, slideData, lazy) {

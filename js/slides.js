@@ -43,12 +43,24 @@ function classifyPortraitImage(img) {
   }
 }
 
+function webpFilename(file) {
+  return file.replace(/\.(jpe?g)$/i, ".webp");
+}
+
 function createSlideImage(file) {
+  const picture = document.createElement("picture");
+  const source = document.createElement("source");
+  source.srcset = `${IMAGE_DIR}${webpFilename(file)}`;
+  source.type = "image/webp";
+
   const img = document.createElement("img");
   img.src = `${IMAGE_DIR}${file}`;
   img.alt = "Photograph by Jaehyun Kim";
+
+  picture.appendChild(source);
+  picture.appendChild(img);
   classifyPortraitImage(img);
-  return img;
+  return picture;
 }
 
 function flattenJaehyunSequence(sequence) {
@@ -135,9 +147,10 @@ function mountJaehyunSlideImages(slide, slideData, options = {}) {
   } else if (slideData.type === "pair-spaced") {
     const spread = slide.querySelector(".pair-spread");
     slideData.files.forEach((file, fileIndex) => {
-      const img = createSlideImage(file);
+      const picture = createSlideImage(file);
+      const img = picture.querySelector("img");
       img.classList.add(fileIndex === 0 ? "pair-image-a" : "pair-image-b");
-      spread.appendChild(img);
+      spread.appendChild(picture);
     });
   }
 
@@ -151,7 +164,7 @@ function mountJaehyunSlideImages(slide, slideData, options = {}) {
 function unmountJaehyunSlideImages(slide) {
   if (slide.dataset.imagesMounted !== "true") return;
 
-  slide.querySelectorAll("img").forEach((img) => img.remove());
+  slide.querySelectorAll("picture").forEach((picture) => picture.remove());
   delete slide.dataset.imagesMounted;
 }
 
