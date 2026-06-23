@@ -382,6 +382,14 @@ img {
   text-align: left;
 }
 
+.info-panel .info-photo {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+}
+
 .info-panel .info-bio {
   margin-bottom: 2.4em;
 }
