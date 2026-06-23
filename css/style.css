@@ -138,24 +138,6 @@ img {
 }
 
 @media (min-width: 769px) {
-  :root {
-    --desktop-nav-width: 260px;
-    --desktop-hero-padding-x: 128px;
-    --desktop-hero-max-w: calc(100vw - var(--desktop-nav-width) - var(--desktop-hero-padding-x));
-  }
-
-  .content {
-    inset: auto;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: var(--desktop-nav-width);
-  }
-
-  .info-panel {
-    left: 0;
-  }
-
   .hero-slideshow .slide {
     visibility: hidden;
     transition: opacity 0.1s ease-out, visibility 0s linear 0.1s;
@@ -338,92 +320,6 @@ img {
 
 .hero-slideshow .slide-pair-asymmetric .pair-image-a {
   margin-bottom: 9vh;
-}
-
-@media (min-width: 769px) {
-  .hero-slideshow .slide-single img {
-    max-width: min(75vw, calc(var(--desktop-hero-max-w) * 0.75));
-  }
-
-  .hero-slideshow .slide-single img.img-portrait {
-    max-width: min(80vw, calc(var(--desktop-hero-max-w) * 0.8));
-  }
-
-  .hero-slideshow .slide-opening img {
-    max-width: min(90vw, calc(var(--desktop-hero-max-w) * 0.9));
-  }
-
-  .hero-slideshow .slide-opening img.img-portrait {
-    max-width: min(96vw, calc(var(--desktop-hero-max-w) * 0.96));
-  }
-
-  .hero-slideshow .slide-lower-left img {
-    max-width: min(30vw, calc(var(--desktop-hero-max-w) * 0.3));
-  }
-
-  .hero-slideshow .slide-lower-left img.img-portrait {
-    max-width: min(32vw, calc(var(--desktop-hero-max-w) * 0.32));
-  }
-
-  .hero-slideshow .slide-reduced img {
-    max-width: min(60vw, calc(var(--desktop-hero-max-w) * 0.6));
-  }
-
-  .hero-slideshow .slide-reduced img.img-portrait {
-    max-width: min(64vw, calc(var(--desktop-hero-max-w) * 0.64));
-  }
-
-  .hero-slideshow .slide-reduced-forty img {
-    max-width: min(36vw, calc(var(--desktop-hero-max-w) * 0.36));
-  }
-
-  .hero-slideshow .slide-reduced-forty img.img-portrait {
-    max-width: min(38vw, calc(var(--desktop-hero-max-w) * 0.38));
-  }
-
-  .hero-slideshow .slide-small img {
-    max-width: min(38vw, calc(var(--desktop-hero-max-w) * 0.38));
-  }
-
-  .hero-slideshow .slide-small img.img-portrait {
-    max-width: min(41vw, calc(var(--desktop-hero-max-w) * 0.41));
-  }
-
-  .hero-slideshow .slide-closing img {
-    max-width: min(92vw, calc(var(--desktop-hero-max-w) * 0.92));
-  }
-
-  .hero-slideshow .slide-closing img.img-portrait {
-    max-width: min(97vw, calc(var(--desktop-hero-max-w) * 0.97));
-  }
-
-  .hero-slideshow .contact-sheet-grid {
-    max-width: var(--desktop-hero-max-w);
-  }
-
-  .hero-slideshow .contact-sheet-grid img {
-    height: min(24vh, calc(var(--desktop-hero-max-w) * 0.22));
-    max-height: min(24vh, calc(var(--desktop-hero-max-w) * 0.22));
-  }
-
-  .hero-slideshow .work-spread-grid {
-    max-width: var(--desktop-hero-max-w);
-  }
-
-  .hero-slideshow .slide-work-spread img {
-    height: min(34.5vh, calc(var(--desktop-hero-max-w) * 0.3));
-    max-height: min(34.5vh, calc(var(--desktop-hero-max-w) * 0.3));
-  }
-
-  .hero-slideshow .pair-spread {
-    gap: min(6vw, calc(var(--desktop-hero-max-w) * 0.06));
-    max-width: var(--desktop-hero-max-w);
-  }
-
-  .hero-slideshow .slide-pair-asymmetric .pair-image-a,
-  .hero-slideshow .slide-pair-asymmetric .pair-image-b {
-    max-width: min(18.69vw, calc(var(--desktop-hero-max-w) * 0.1869));
-  }
 }
 
 .hero-nav {
