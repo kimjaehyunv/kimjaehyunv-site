@@ -151,6 +151,14 @@ img {
   .hero-slideshow .slide img {
     background-color: transparent;
   }
+
+  .info-panel .info-photo {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+  }
 }
 
 .hero-slideshow .slide-single img {
@@ -380,14 +388,6 @@ img {
   line-height: 1.75;
   letter-spacing: 0.03em;
   text-align: left;
-}
-
-.info-panel .info-photo {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  margin: 0;
 }
 
 .info-panel .info-bio {
@@ -644,6 +644,10 @@ img {
   }
 
   .info-panel .info-photo {
+    display: block;
+    width: auto;
     max-width: 44%;
+    height: auto;
+    margin: 0;
   }
 }
