@@ -642,4 +642,8 @@ img {
     padding: 96px 24px 64px;
     font-size: 14px;
   }
+
+  .info-panel .info-photo {
+    max-width: 80%;
+  }
 }
