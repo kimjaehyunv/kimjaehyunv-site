@@ -152,12 +152,14 @@ img {
     background-color: transparent;
   }
 
-  .info-panel .info-photo {
-    display: block;
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    margin: 0;
+  #jaehyun .hero-slideshow .slide-opening img {
+    max-width: 76.5vw;
+    max-height: 76.5vh;
+  }
+
+  #jaehyun .hero-slideshow .slide-opening img.img-portrait {
+    max-width: 81.6vw;
+    max-height: 81.6vh;
   }
 }
 
@@ -388,6 +390,25 @@ img {
   line-height: 1.75;
   letter-spacing: 0.03em;
   text-align: left;
+}
+
+.info-panel .info-photo {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+@media (min-width: 769px) {
+  .info-panel {
+    top: 36px;
+    transform: none;
+  }
+
+  .info-panel .info-photo {
+    max-width: 76.5%;
+  }
 }
 
 .info-panel .info-bio {
