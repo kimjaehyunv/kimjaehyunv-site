@@ -138,6 +138,110 @@ img {
 }
 
 @media (min-width: 769px) {
+  :root {
+    --desktop-nav-width: 260px;
+  }
+
+  .content {
+    inset: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: var(--desktop-nav-width);
+  }
+
+  .info-panel {
+    left: 0;
+  }
+
+  .hero-image {
+    container-type: inline-size;
+  }
+
+  .hero-slideshow .slide-single img {
+    max-width: min(75vw, 75cqw);
+  }
+
+  .hero-slideshow .slide-single img.img-portrait {
+    max-width: min(80vw, 80cqw);
+  }
+
+  .hero-slideshow .slide-opening img {
+    max-width: min(90vw, 90cqw);
+  }
+
+  .hero-slideshow .slide-opening img.img-portrait {
+    max-width: min(96vw, 96cqw);
+  }
+
+  .hero-slideshow .slide-lower-left img {
+    max-width: min(30vw, 30cqw);
+  }
+
+  .hero-slideshow .slide-lower-left img.img-portrait {
+    max-width: min(32vw, 32cqw);
+  }
+
+  .hero-slideshow .slide-reduced img {
+    max-width: min(60vw, 60cqw);
+  }
+
+  .hero-slideshow .slide-reduced img.img-portrait {
+    max-width: min(64vw, 64cqw);
+  }
+
+  .hero-slideshow .slide-reduced-forty img {
+    max-width: min(36vw, 36cqw);
+  }
+
+  .hero-slideshow .slide-reduced-forty img.img-portrait {
+    max-width: min(38vw, 38cqw);
+  }
+
+  .hero-slideshow .slide-small img {
+    max-width: min(38vw, 38cqw);
+  }
+
+  .hero-slideshow .slide-small img.img-portrait {
+    max-width: min(41vw, 41cqw);
+  }
+
+  .hero-slideshow .slide-closing img {
+    max-width: min(92vw, 92cqw);
+  }
+
+  .hero-slideshow .slide-closing img.img-portrait {
+    max-width: min(97vw, 97cqw);
+  }
+
+  .hero-slideshow .contact-sheet-grid {
+    max-width: 100cqw;
+  }
+
+  .hero-slideshow .contact-sheet-grid img {
+    height: min(24vh, 22cqw);
+    max-height: min(24vh, 22cqw);
+  }
+
+  .hero-slideshow .work-spread-grid {
+    max-width: 100cqw;
+  }
+
+  .hero-slideshow .slide-work-spread img {
+    height: min(34.5vh, 30cqw);
+    max-height: min(34.5vh, 30cqw);
+  }
+
+  .hero-slideshow .pair-spread {
+    gap: min(6vw, 6cqw);
+    max-width: 100cqw;
+  }
+
+  .hero-slideshow .slide-pair-asymmetric .pair-image-a,
+  .hero-slideshow .slide-pair-asymmetric .pair-image-b {
+    max-width: min(18.69vw, 18.69cqw);
+  }
+
   .hero-slideshow .slide {
     visibility: hidden;
     transition: opacity 0.1s ease-out, visibility 0s linear 0.1s;
