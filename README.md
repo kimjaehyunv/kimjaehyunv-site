@@ -2,13 +2,13 @@
 
 JAEHYUN KIM 포트폴리오 사이트의 사진을 관리하는 방법입니다.
 
-**운영자가 직접 수정하는 파일은 두 가지뿐입니다.**
+**운영자가 직접 수정하는 파일은 JPG와 slides.txt뿐입니다.**
 
 - `images/work/slides.txt` — WORK 페이지
 - `images/jaehyun/slides.txt` — JAEHYUN 페이지
-- `images/work/`, `images/jaehyun/` — 사진 파일
+- `images/work/`, `images/jaehyun/` — **JPG 원본만** 관리
 
-JavaScript, CSS, HTML, `gallery.json` 은 **수정하지 마세요.**
+JavaScript, CSS, HTML, `gallery.json`, `.webp` 파일은 **수정하지 마세요.** WebP는 Update Gallery 실행 시 자동 생성됩니다.
 
 ---
 
@@ -85,16 +85,20 @@ JavaScript, CSS, HTML, `gallery.json` 은 **수정하지 마세요.**
    - 한 장: `32.jpg`
    - 두 장 한 슬라이드: `[pair] 32a.jpg + 32b.jpg`
 4. **Update Gallery.command** 를 더블클릭합니다.
+   - JPG 자동 최적화
+   - WebP 자동 생성
+   - gallery.json 자동 생성
 5. 변경 사항을 GitHub에 push 하면 사이트에 반영됩니다.
 
-> webp 파일이 없어도 jpg만 있으면 사이트는 동작합니다. webp는 선택 사항(용량 최적화)입니다.
+> **JPG만 넣으면 됩니다.** WebP는 Update Gallery가 자동으로 만들어 줍니다.
 
 ---
 
 ## 사진 삭제
 
 1. `slides.txt` 에서 해당 줄을 **삭제**합니다.
-2. `images/work/` 또는 `images/jaehyun/` 에서 jpg(또는 JPG)와 webp 파일을 **삭제**합니다.
+2. `images/work/` 또는 `images/jaehyun/` 에서 **JPG 파일을 삭제**합니다.
+   - WebP는 선택적으로 삭제 (다시 실행하면 재생성됨)
 3. **Update Gallery.command** 를 더블클릭합니다.
 4. GitHub에 push 합니다.
 
@@ -113,7 +117,10 @@ JavaScript, CSS, HTML, `gallery.json` 은 **수정하지 마세요.**
 
 1. Finder에서 프로젝트 폴더(`kimjaehyunv-site`)를 엽니다.
 2. **Update Gallery.command** 파일을 **더블클릭**합니다.
-3. 터미널 창이 열리며 `gallery.json` 이 자동 생성됩니다.
+3. 터미널 창이 열리며 아래 작업이 자동으로 실행됩니다.
+   - slides.txt에 있는 JPG 감지 및 최적화
+   - WebP 자동 생성
+   - gallery.json 자동 생성
 4. "Done" 메시지가 나오면 Enter 를 눌러 창을 닫습니다.
 
 **처음 실행 시 Mac이 차단할 수 있습니다.**
@@ -134,8 +141,9 @@ python3 scripts/build-gallery.py
 
 | 파일 | 설명 |
 |------|------|
-| `images/work/gallery.json` | WORK 슬라이드 데이터 (slides.txt → 자동 생성) |
-| `images/jaehyun/gallery.json` | JAEHYUN 슬라이드 데이터 (slides.txt → 자동 생성) |
+| `images/work/gallery.json` | WORK 슬라이드 데이터 (자동 생성) |
+| `images/jaehyun/gallery.json` | JAEHYUN 슬라이드 데이터 (자동 생성) |
+| `images/*/*.webp` | WebP 최적화 파일 (JPG에서 자동 생성) |
 
 ---
 
@@ -168,5 +176,6 @@ kimjaehyunv-site/
 │       ├── gallery.json      ← 자동 생성
 │       └── *.jpg / *.webp
 └── scripts/
-    └── build-gallery.py      ← gallery.json 생성 스크립트
+    ├── build-gallery.py      ← JPG 최적화 + WebP + gallery.json 생성
+    └── optimize-images.py    ← 이미지 최적화 로직
 ```

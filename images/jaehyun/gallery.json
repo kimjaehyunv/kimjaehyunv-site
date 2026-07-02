@@ -170,5 +170,11 @@
       "31.jpg"
     ],
     "variant": "closing"
+  },
+  {
+    "type": "single",
+    "files": [
+      "32.jpg"
+    ]
   }
 ]

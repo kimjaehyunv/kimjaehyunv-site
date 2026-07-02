@@ -1,14 +1,28 @@
 #!/usr/bin/env python3
-"""Build gallery.json from slides.txt for WORK and JAEHYUN sections."""
+"""Build gallery.json from slides.txt and optimize referenced JPG images."""
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+
+_optimize_spec = importlib.util.spec_from_file_location(
+    "optimize_images",
+    ROOT / "scripts" / "optimize-images.py",
+)
+if _optimize_spec is None or _optimize_spec.loader is None:
+    raise ImportError("Could not load scripts/optimize-images.py")
+optimize_images = importlib.util.module_from_spec(_optimize_spec)
+_optimize_spec.loader.exec_module(optimize_images)
+
+find_unreferenced_jpgs = optimize_images.find_unreferenced_jpgs
+optimize_gallery_images = optimize_images.optimize_gallery_images
+write_report = optimize_images.write_report
 
 WORK_DIR = ROOT / "images" / "work"
 JAEHYUN_DIR = ROOT / "images" / "jaehyun"
@@ -159,6 +173,16 @@ def write_gallery(path: Path, gallery: list[dict]) -> None:
     path.write_text(json.dumps(gallery, indent=2) + "\n", encoding="utf-8")
 
 
+def report_new_jpgs(image_dir: Path, gallery: list[dict], label: str) -> None:
+    referenced = [filename for slide in gallery for filename in slide["files"]]
+    unreferenced = find_unreferenced_jpgs(image_dir, referenced)
+    if unreferenced:
+        print(f"Note: {label} folder has JPG files not listed in slides.txt:")
+        for name in unreferenced:
+            print(f"  - {name}")
+        print("  Add them to slides.txt to include them on the site.")
+
+
 def main() -> int:
     if not WORK_SLIDES_TXT.is_file():
         print(f"Error: missing {WORK_SLIDES_TXT}", file=sys.stderr)
@@ -177,6 +201,25 @@ def main() -> int:
         validate_files(WORK_DIR, work_gallery, "WORK")
         validate_files(JAEHYUN_DIR, jaehyun_gallery, "JAEHYUN")
 
+        report_new_jpgs(WORK_DIR, work_gallery, "WORK")
+        report_new_jpgs(JAEHYUN_DIR, jaehyun_gallery, "JAEHYUN")
+
+        print("")
+        print("Step 1/2: Optimizing JPG images and generating WebP...")
+        optimize_results = optimize_gallery_images(
+            WORK_DIR,
+            JAEHYUN_DIR,
+            work_gallery,
+            jaehyun_gallery,
+        )
+        write_report(optimize_results)
+        if optimize_results:
+            print(f"Optimized {len(optimize_results)} image(s).")
+        else:
+            print("All referenced JPG/WebP files are already up to date.")
+
+        print("")
+        print("Step 2/2: Building gallery.json...")
         write_gallery(WORK_GALLERY, work_gallery)
         write_gallery(JAEHYUN_GALLERY, jaehyun_gallery)
 
@@ -185,6 +228,13 @@ def main() -> int:
         return 0
     except ValueError as error:
         print(f"Error: {error}", file=sys.stderr)
+        return 1
+    except ImportError as error:
+        print(
+            "Error: Pillow is required. Install with: python3 -m pip install Pillow",
+            file=sys.stderr,
+        )
+        print(error, file=sys.stderr)
         return 1
 
 
