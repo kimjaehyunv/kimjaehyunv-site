@@ -6,6 +6,25 @@ const viewers = new Map();
 let viewportListenerAttached = false;
 let workSlideshowBuilt = false;
 
+async function loadGalleries() {
+  const [workResponse, jaehyunResponse] = await Promise.all([
+    fetch("images/work/gallery.json", { cache: "no-store" }),
+    fetch("images/jaehyun/gallery.json", { cache: "no-store" }),
+  ]);
+
+  if (!workResponse.ok) {
+    throw new Error(`Failed to load images/work/gallery.json (${workResponse.status})`);
+  }
+  if (!jaehyunResponse.ok) {
+    throw new Error(
+      `Failed to load images/jaehyun/gallery.json (${jaehyunResponse.status})`,
+    );
+  }
+
+  setWorkSlideSequence(await workResponse.json());
+  setJaehyunSlideSequence(await jaehyunResponse.json());
+}
+
 function setNavReady(sectionId, ready) {
   const nav = document.getElementById(sectionId)?.querySelector(".hero-nav");
   nav?.classList.toggle("hero-nav-ready", ready);
@@ -286,8 +305,15 @@ function attachViewportListener() {
   MOBILE_MEDIA.addEventListener("change", rebuildSlideshows);
 }
 
-function boot() {
+async function boot() {
   attachViewportListener();
+
+  try {
+    await loadGalleries();
+  } catch (error) {
+    console.error(error);
+    return;
+  }
 
   const initialSection = window.location.hash.slice(1) || "jaehyun";
   const bootSection = document.getElementById(initialSection)

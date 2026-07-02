@@ -1,0 +1,174 @@
+[
+  {
+    "type": "single",
+    "files": [
+      "01.jpg"
+    ],
+    "variant": "opening"
+  },
+  {
+    "type": "single",
+    "files": [
+      "02.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "03.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "04.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "05.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "06.JPG"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "07.JPG"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "08.JPG"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "09.jpg"
+    ],
+    "variant": "reduced-forty"
+  },
+  {
+    "type": "single",
+    "files": [
+      "10.JPG"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "11.JPG"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "12.JPG"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "13.JPG"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "14.JPG"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "15.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "16.JPG"
+    ],
+    "variant": "lower-left"
+  },
+  {
+    "type": "single",
+    "files": [
+      "17.JPG"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "18.jpg"
+    ]
+  },
+  {
+    "type": "contact-sheet",
+    "files": [
+      "19.jpg",
+      "20.jpg",
+      "21.jpg",
+      "22.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "23.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "24.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "25.jpg"
+    ]
+  },
+  {
+    "type": "pair-spaced",
+    "files": [
+      "26.jpg",
+      "27.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "28.jpg"
+    ],
+    "variant": "reduced"
+  },
+  {
+    "type": "single",
+    "files": [
+      "29.JPG"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "30.jpg"
+    ],
+    "variant": "small"
+  },
+  {
+    "type": "single",
+    "files": [
+      "31.jpg"
+    ],
+    "variant": "closing"
+  }
+]
