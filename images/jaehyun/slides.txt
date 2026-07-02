@@ -72,4 +72,3 @@
 [small] 30.jpg
 [closing] 31.jpg
 32.jpg
-33.jpg
