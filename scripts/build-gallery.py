@@ -217,7 +217,7 @@ def main() -> int:
         report_new_jpgs(JAEHYUN_DIR, jaehyun_gallery, "JAEHYUN")
 
         print("")
-        print("Step 1/2: Building web JPG + WebP from originals/ (originals are never modified)...")
+        print("Step 1/3: Building web JPG + WebP from originals/ (originals are never modified)...")
         optimize_results = optimize_gallery_images(
             WORK_DIR,
             JAEHYUN_DIR,
@@ -231,7 +231,7 @@ def main() -> int:
             print("All web JPG/WebP files are already up to date.")
 
         print("")
-        print("Step 2/2: Building gallery.json...")
+        print("Step 2/3: Building gallery.json...")
         write_gallery(WORK_GALLERY, work_gallery)
         write_gallery(JAEHYUN_GALLERY, jaehyun_gallery)
 
