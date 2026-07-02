@@ -70,4 +70,5 @@
 [reduced] 28.jpg
 29.JPG
 [small] 30.jpg
+30a.jpg
 [closing] 31.jpg
