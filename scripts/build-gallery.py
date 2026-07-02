@@ -23,6 +23,8 @@ _optimize_spec.loader.exec_module(optimize_images)
 find_unreferenced_jpgs = optimize_images.find_unreferenced_jpgs
 optimize_gallery_images = optimize_images.optimize_gallery_images
 write_report = optimize_images.write_report
+ensure_original = optimize_images.ensure_original
+collect_referenced_filenames = optimize_images.collect_referenced_filenames
 
 WORK_DIR = ROOT / "images" / "work"
 JAEHYUN_DIR = ROOT / "images" / "jaehyun"
@@ -86,6 +88,8 @@ def parse_slides_txt(path: Path) -> list[tuple[str | None, list[str], int]]:
 
 
 def image_exists(image_dir: Path, filename: str) -> bool:
+    if optimize_images.resolve_original_path(image_dir, filename):
+        return True
     if (image_dir / filename).is_file():
         return True
     stem = Path(filename).stem
@@ -183,6 +187,11 @@ def report_new_jpgs(image_dir: Path, gallery: list[dict], label: str) -> None:
         print("  Add them to slides.txt to include them on the site.")
 
 
+def prepare_originals(image_dir: Path, gallery: list[dict]) -> None:
+    for filename in collect_referenced_filenames(gallery):
+        ensure_original(image_dir, filename)
+
+
 def main() -> int:
     if not WORK_SLIDES_TXT.is_file():
         print(f"Error: missing {WORK_SLIDES_TXT}", file=sys.stderr)
@@ -198,6 +207,9 @@ def main() -> int:
         work_gallery = build_work_gallery(work_entries)
         jaehyun_gallery = build_jaehyun_gallery(jaehyun_entries)
 
+        prepare_originals(WORK_DIR, work_gallery)
+        prepare_originals(JAEHYUN_DIR, jaehyun_gallery)
+
         validate_files(WORK_DIR, work_gallery, "WORK")
         validate_files(JAEHYUN_DIR, jaehyun_gallery, "JAEHYUN")
 
@@ -205,7 +217,7 @@ def main() -> int:
         report_new_jpgs(JAEHYUN_DIR, jaehyun_gallery, "JAEHYUN")
 
         print("")
-        print("Step 1/2: Optimizing JPG images and generating WebP...")
+        print("Step 1/2: Building web JPG + WebP from originals/ (originals are never modified)...")
         optimize_results = optimize_gallery_images(
             WORK_DIR,
             JAEHYUN_DIR,
@@ -216,7 +228,7 @@ def main() -> int:
         if optimize_results:
             print(f"Optimized {len(optimize_results)} image(s).")
         else:
-            print("All referenced JPG/WebP files are already up to date.")
+            print("All web JPG/WebP files are already up to date.")
 
         print("")
         print("Step 2/2: Building gallery.json...")

@@ -2,13 +2,17 @@
 
 JAEHYUN KIM 포트폴리오 사이트의 사진을 관리하는 방법입니다.
 
-**운영자가 직접 수정하는 파일은 JPG와 slides.txt뿐입니다.**
+**운영자가 직접 수정하는 파일**
 
 - `images/work/slides.txt` — WORK 페이지
 - `images/jaehyun/slides.txt` — JAEHYUN 페이지
-- `images/work/`, `images/jaehyun/` — **JPG 원본만** 관리
+- `images/work/originals/` — WORK **원본 JPG** (여기에만 넣기)
+- `images/jaehyun/originals/` — JAEHYUN **원본 JPG** (여기에만 넣기)
 
-JavaScript, CSS, HTML, `gallery.json`, `.webp` 파일은 **수정하지 마세요.** WebP는 Update Gallery 실행 시 자동 생성됩니다.
+JavaScript, CSS, HTML, `gallery.json`, 웹용 JPG, `.webp` 파일은 **수정하지 마세요.**  
+Update Gallery 실행 시 `originals/` 원본 → 웹용 JPG + WebP + gallery.json 이 자동 생성됩니다.
+
+> **원본 JPG는 `originals/` 폴더에만 넣으세요.** Update Gallery를 여러 번 실행해도 `originals/` 파일은 절대 변경되지 않습니다.
 
 ---
 
@@ -80,27 +84,27 @@ JavaScript, CSS, HTML, `gallery.json`, `.webp` 파일은 **수정하지 마세�
 ## 사진 추가
 
 1. 사진 파일을 준비합니다 (`32.jpg` 또는 `15a.jpg`, `15b.jpg` 등).
-2. `images/work/` 또는 `images/jaehyun/` 폴더에 파일을 넣습니다.
+2. `images/work/originals/` 또는 `images/jaehyun/originals/` 폴더에 **원본 JPG**를 넣습니다.
 3. 해당 `slides.txt` 에 **원하는 위치에 한 줄**을 추가합니다.
    - 한 장: `32.jpg`
    - 두 장 한 슬라이드: `[pair] 32a.jpg + 32b.jpg`
 4. **Update Gallery.command** 를 더블클릭합니다.
-   - JPG 자동 최적화
+   - 원본 JPG → 웹용 JPG 생성
    - WebP 자동 생성
    - gallery.json 자동 생성
 5. 변경 사항을 GitHub에 push 하면 사이트에 반영됩니다.
 
-> **JPG만 넣으면 됩니다.** WebP는 Update Gallery가 자동으로 만들어 줍니다.
+> **원본은 `originals/`에만 넣으세요.** WebP와 웹용 JPG는 자동 생성됩니다.
 
 ---
 
 ## 사진 삭제
 
 1. `slides.txt` 에서 해당 줄을 **삭제**합니다.
-2. `images/work/` 또는 `images/jaehyun/` 에서 **JPG 파일을 삭제**합니다.
-   - WebP는 선택적으로 삭제 (다시 실행하면 재생성됨)
-3. **Update Gallery.command** 를 더블클릭합니다.
-4. GitHub에 push 합니다.
+2. `originals/` 에서 **원본 JPG**를 삭제합니다.
+3. (선택) 웹용 JPG와 WebP도 삭제
+4. **Update Gallery.command** 를 더블클릭합니다.
+5. GitHub에 push 합니다.
 
 ---
 
@@ -118,8 +122,9 @@ JavaScript, CSS, HTML, `gallery.json`, `.webp` 파일은 **수정하지 마세�
 1. Finder에서 프로젝트 폴더(`kimjaehyunv-site`)를 엽니다.
 2. **Update Gallery.command** 파일을 **더블클릭**합니다.
 3. 터미널 창이 열리며 아래 작업이 자동으로 실행됩니다.
-   - slides.txt에 있는 JPG 감지 및 최적화
-   - WebP 자동 생성
+   - `originals/` 원본 JPG 읽기 (원본은 수정하지 않음)
+   - 웹용 JPG 생성 (JPEG quality 88)
+   - WebP 자동 생성 (quality 86)
    - gallery.json 자동 생성
 4. "Done" 메시지가 나오면 Enter 를 눌러 창을 닫습니다.
 
@@ -143,7 +148,8 @@ python3 scripts/build-gallery.py
 |------|------|
 | `images/work/gallery.json` | WORK 슬라이드 데이터 (자동 생성) |
 | `images/jaehyun/gallery.json` | JAEHYUN 슬라이드 데이터 (자동 생성) |
-| `images/*/*.webp` | WebP 최적화 파일 (JPG에서 자동 생성) |
+| `images/*/*.jpg` (originals 제외) | 웹용 최적화 JPG (originals에서 자동 생성) |
+| `images/*/*.webp` | WebP 최적화 파일 (자동 생성) |
 
 ---
 
@@ -169,12 +175,16 @@ kimjaehyunv-site/
 ├── images/
 │   ├── work/
 │   │   ├── slides.txt        ← WORK 운영자 편집
+│   │   ├── originals/        ← WORK 원본 JPG (운영자가 여기에만 추가)
 │   │   ├── gallery.json      ← 자동 생성
-│   │   └── *.jpg / *.webp
+│   │   ├── *.jpg             ← 웹용 JPG (자동 생성)
+│   │   └── *.webp            ← 자동 생성
 │   └── jaehyun/
 │       ├── slides.txt        ← JAEHYUN 운영자 편집
+│       ├── originals/        ← JAEHYUN 원본 JPG (운영자가 여기에만 추가)
 │       ├── gallery.json      ← 자동 생성
-│       └── *.jpg / *.webp
+│       ├── *.jpg             ← 웹용 JPG (자동 생성)
+│       └── *.webp            ← 자동 생성
 └── scripts/
     ├── build-gallery.py      ← JPG 최적화 + WebP + gallery.json 생성
     └── optimize-images.py    ← 이미지 최적화 로직

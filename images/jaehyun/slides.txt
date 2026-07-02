@@ -4,7 +4,7 @@
 #
 # 이 파일만 수정하면 JAEHYUN 페이지 사진 순서와 구성이 바뀝니다.
 # gallery.json 은 직접 수정하지 마세요. Update Gallery.command 로 자동 생성됩니다.
-# WebP 파일도 직접 만들 필요 없습니다. JPG만 넣고 Update Gallery.command 를 실행하세요.
+# WebP 파일도 직접 만들 필요 없습니다. originals/ 에 JPG만 넣고 Update Gallery.command 를 실행하세요.
 #
 # ── 기본 규칙 ──
 #   • 한 줄 = 슬라이드 한 장 (위에서 아래 = 사이트에서 보이는 순서)
@@ -32,9 +32,11 @@
 #   순서는 이 파일의 줄 순서가 기준입니다
 #
 # ── 사진 추가/삭제/순서 변경 후 ──
-#   1) images/jaehyun/ 폴더에 사진 파일 추가 또는 삭제
+#   1) images/jaehyun/originals/ 에 원본 JPG 추가 또는 삭제
 #   2) 이 파일(slides.txt) 수정
 #   3) Update Gallery.command 더블클릭
+#      → originals/ 원본은 절대 수정되지 않음
+#      → 웹용 JPG + WebP + gallery.json 자동 생성
 #
 # ============================================================
 
