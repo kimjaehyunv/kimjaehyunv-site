@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 echo ""
-echo "Step 3/3: Publishing to GitHub..."
+echo "Step 4/4: Publishing to GitHub..."
 
 if ! command -v git >/dev/null 2>&1; then
   echo ""

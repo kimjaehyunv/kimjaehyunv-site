@@ -20,11 +20,11 @@ if _optimize_spec is None or _optimize_spec.loader is None:
 optimize_images = importlib.util.module_from_spec(_optimize_spec)
 _optimize_spec.loader.exec_module(optimize_images)
 
-find_unreferenced_jpgs = optimize_images.find_unreferenced_jpgs
 optimize_gallery_images = optimize_images.optimize_gallery_images
 write_report = optimize_images.write_report
 ensure_original = optimize_images.ensure_original
 collect_referenced_filenames = optimize_images.collect_referenced_filenames
+cleanup_unreferenced_files = optimize_images.cleanup_unreferenced_files
 
 WORK_DIR = ROOT / "images" / "work"
 JAEHYUN_DIR = ROOT / "images" / "jaehyun"
@@ -177,14 +177,8 @@ def write_gallery(path: Path, gallery: list[dict]) -> None:
     path.write_text(json.dumps(gallery, indent=2) + "\n", encoding="utf-8")
 
 
-def report_new_jpgs(image_dir: Path, gallery: list[dict], label: str) -> None:
-    referenced = [filename for slide in gallery for filename in slide["files"]]
-    unreferenced = find_unreferenced_jpgs(image_dir, referenced)
-    if unreferenced:
-        print(f"Note: {label} folder has JPG files not listed in slides.txt:")
-        for name in unreferenced:
-            print(f"  - {name}")
-        print("  Add them to slides.txt to include them on the site.")
+def report_cleanup(image_dir: Path, gallery: list[dict], label: str) -> None:
+    cleanup_unreferenced_files(image_dir, gallery, label)
 
 
 def prepare_originals(image_dir: Path, gallery: list[dict]) -> None:
@@ -207,17 +201,19 @@ def main() -> int:
         work_gallery = build_work_gallery(work_entries)
         jaehyun_gallery = build_jaehyun_gallery(jaehyun_entries)
 
+        print("")
+        print("Step 1/4: Removing files not listed in slides.txt...")
+        report_cleanup(WORK_DIR, work_gallery, "WORK")
+        report_cleanup(JAEHYUN_DIR, jaehyun_gallery, "JAEHYUN")
+
         prepare_originals(WORK_DIR, work_gallery)
         prepare_originals(JAEHYUN_DIR, jaehyun_gallery)
 
         validate_files(WORK_DIR, work_gallery, "WORK")
         validate_files(JAEHYUN_DIR, jaehyun_gallery, "JAEHYUN")
 
-        report_new_jpgs(WORK_DIR, work_gallery, "WORK")
-        report_new_jpgs(JAEHYUN_DIR, jaehyun_gallery, "JAEHYUN")
-
         print("")
-        print("Step 1/3: Building web JPG + WebP from originals/ (originals are never modified)...")
+        print("Step 2/4: Building web JPG + WebP from originals/ (originals are never modified)...")
         optimize_results = optimize_gallery_images(
             WORK_DIR,
             JAEHYUN_DIR,
@@ -231,7 +227,7 @@ def main() -> int:
             print("All web JPG/WebP files are already up to date.")
 
         print("")
-        print("Step 2/3: Building gallery.json...")
+        print("Step 3/4: Building gallery.json...")
         write_gallery(WORK_GALLERY, work_gallery)
         write_gallery(JAEHYUN_GALLERY, jaehyun_gallery)
 

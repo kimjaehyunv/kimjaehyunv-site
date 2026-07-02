@@ -349,6 +349,41 @@ def collect_referenced_filenames(gallery: list[dict]) -> list[str]:
     return filenames
 
 
+def referenced_stems(gallery: list[dict]) -> set[str]:
+    return {Path(name).stem.lower() for slide in gallery for name in slide["files"]}
+
+
+def cleanup_unreferenced_files(image_dir: Path, gallery: list[dict], label: str) -> list[str]:
+    """Delete originals, web JPG, and WebP not listed in slides.txt."""
+    keep = referenced_stems(gallery)
+    deleted: list[str] = []
+
+    originals = originals_dir(image_dir)
+    if originals.is_dir():
+        for path in list_original_jpgs(image_dir):
+            if path.stem.lower() in keep:
+                continue
+            path.unlink()
+            deleted.append(str(path.relative_to(ROOT)))
+
+    for path in sorted(image_dir.iterdir()):
+        if not path.is_file():
+            continue
+        stem = path.stem.lower()
+        if stem in keep:
+            continue
+        if path.suffix.lower() in {".jpg", ".jpeg", ".webp"}:
+            path.unlink()
+            deleted.append(str(path.relative_to(ROOT)))
+
+    if deleted:
+        print(f"Removed {len(deleted)} unreferenced file(s) from {label}:")
+        for item in deleted:
+            print(f"  - {item}")
+
+    return deleted
+
+
 def find_unreferenced_jpgs(image_dir: Path, referenced_filenames: list[str]) -> list[str]:
     referenced_stems = {Path(name).stem.lower() for name in referenced_filenames}
     unreferenced = []
