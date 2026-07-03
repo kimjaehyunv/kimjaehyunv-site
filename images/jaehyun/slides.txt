@@ -71,4 +71,5 @@
 29.JPG
 [small] 30.jpg
 30a.jpg
+30b.jpg
 [closing] 31.jpg

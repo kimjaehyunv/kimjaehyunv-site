@@ -173,6 +173,12 @@
   {
     "type": "single",
     "files": [
+      "30b.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
       "31.jpg"
     ],
     "variant": "closing"
