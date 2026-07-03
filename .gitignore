@@ -1,1 +1,4 @@
 .DS_Store
+
+# Source originals stay on the operator's Mac only (not deployed to Cloudflare Pages).
+images/*/originals/

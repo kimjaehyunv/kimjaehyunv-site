@@ -54,7 +54,8 @@ gh auth login
 | JS, CSS, HTML | 개발자 전용 |
 
 > **참조 중인 원본은 절대 수정되지 않습니다.**  
-> Update Gallery는 `originals/` 파일을 **읽기만** 하고, 내용을 바꾸지 않습니다.
+> Update Gallery는 `originals/` 파일을 **읽기만** 하고, 내용을 바꾸지 않습니다.  
+> `originals/` 는 **이 Mac에만** 두고 GitHub·Cloudflare에는 올라가지 않습니다 (웹용 JPG/WebP만 배포됩니다).
 
 ---
 
