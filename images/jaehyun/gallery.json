@@ -2,9 +2,15 @@
   {
     "type": "single",
     "files": [
-      "01.jpg"
+      "00.jpg"
     ],
     "variant": "opening"
+  },
+  {
+    "type": "single",
+    "files": [
+      "01.jpg"
+    ]
   },
   {
     "type": "single",
