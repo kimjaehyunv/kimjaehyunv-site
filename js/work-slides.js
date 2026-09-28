@@ -190,7 +190,7 @@ function buildWorkSlideshow(container, options = {}) {
       slideData.type === "work-spread" ||
       slideData.type === "work-spread-lower" ||
       slideData.type === "work-spread-quad" ||
-      slideData.type === "work-spread-pair-vertical"
+      slideData.type === "work-spread-pair-vertical" ||
       slideData.type === "work-vertical"
     ) {
       buildWorkSpreadSlide(slide, slideData, index !== 0);
