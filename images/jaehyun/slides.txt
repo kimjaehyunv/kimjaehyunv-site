@@ -49,7 +49,6 @@
 03.jpg
 04.jpg
 05.jpg
-06.JPG
 07.JPG
 08.JPG
 08a.jpg
@@ -57,23 +56,19 @@
 10.JPG
 11.JPG
 12.JPG
-13.JPG
 14.JPG
 15.jpg
 [lower-left] 16.JPG
 17.JPG
-18.jpg
 
 [contact] 19.jpg + 20.jpg + 21.jpg + 22.jpg
 
 23.jpg
 24.jpg
-25.jpg
 [pair] 26.jpg + 27.jpg
 [reduced] 28.jpg
 29.JPG
 [small] 30.jpg
 30a.jpg
-30b.jpg
 31.jpg
 [closing] 32.jpg
