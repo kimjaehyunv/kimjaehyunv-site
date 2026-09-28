@@ -63,6 +63,12 @@
   {
     "type": "single",
     "files": [
+      "08a.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
       "09.jpg"
     ],
     "variant": "reduced-forty"
@@ -192,6 +198,12 @@
     "type": "single",
     "files": [
       "31.jpg"
+    ]
+  },
+  {
+    "type": "single",
+    "files": [
+      "32.jpg"
     ],
     "variant": "closing"
   }

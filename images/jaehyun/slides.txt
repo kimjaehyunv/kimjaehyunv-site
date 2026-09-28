@@ -52,6 +52,7 @@
 06.JPG
 07.JPG
 08.JPG
+08a.jpg
 [reduced-forty] 09.jpg
 10.JPG
 11.JPG
@@ -74,4 +75,5 @@
 [small] 30.jpg
 30a.jpg
 30b.jpg
-[closing] 31.jpg
+31.jpg
+[closing] 32.jpg
