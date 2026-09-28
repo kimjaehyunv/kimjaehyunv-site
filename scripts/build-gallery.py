@@ -39,6 +39,7 @@ WORK_KEYWORDS = {
     "spread": "work-spread",
     "spread-lower": "work-spread-lower",
     "spread-quad": "work-spread-quad",
+    "vertical": "work-vertical"
 }
 
 JAEHYUN_VARIANT_KEYWORDS = {

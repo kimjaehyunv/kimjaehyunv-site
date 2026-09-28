@@ -55,7 +55,10 @@ function buildWorkSpreadSlide(slide, slideData, lazy) {
   } else if (slideData.type === "work-spread-quad") {
     slide.classList.add("slide-work-spread-quad");
     grid.classList.add("work-spread-grid-quad");
-  } else if (slideData.type === "work-spread-pair-vertical") {
+  } else if (
+    slideData.type === "work-spread-pair-vertical" ||
+    slideData.type === "work-vertical"
+) {
     slide.classList.add("slide-work-spread-pair-vertical");
     grid.classList.add("work-spread-grid-vertical");
   }
@@ -188,6 +191,7 @@ function buildWorkSlideshow(container, options = {}) {
       slideData.type === "work-spread-lower" ||
       slideData.type === "work-spread-quad" ||
       slideData.type === "work-spread-pair-vertical"
+      slideData.type === "work-vertical"
     ) {
       buildWorkSpreadSlide(slide, slideData, index !== 0);
     }
